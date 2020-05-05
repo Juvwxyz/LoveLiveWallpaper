@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Matrix_Test.cpp">
+      <Filter>MatrixTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LoveLiveWallpaper\src\Matrix.cpp">
+      <Filter>MatrixTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\LoveLiveWallpaper\src\Vector.cpp">
+      <Filter>MatrixTest</Filter>
+    </ClCompile>
+    <ClCompile Include="EventSystem_Test.cpp">
+      <Filter>EventSystemTest</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="..\LoveLiveWallpaper\src\Event.h">
+      <Filter>EventSystemTest</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="MatrixTest">
+      <UniqueIdentifier>{a83aae8b-98d8-4219-b5e9-476ff979705d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EventSystemTest">
+      <UniqueIdentifier>{24062be1-9a31-4d9a-ba2c-2d92ed023be7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{5f76be53-0e53-43c4-a826-aa7a14cf3847}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine">
+      <UniqueIdentifier>{de53faaa-e84d-4a6e-a6f0-c4c55c76074d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Utility">
+      <UniqueIdentifier>{8f9c4271-f568-44bc-be9e-c3cdd91f5201}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Exception">
+      <UniqueIdentifier>{c4aee371-28fb-481f-b049-b954526bb51e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Application">
+      <UniqueIdentifier>{23721787-c15d-4e9d-addc-0911f90598dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine\Input">
+      <UniqueIdentifier>{c16fa334-4214-4b7a-b2e8-1ae723dce4a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine\Input\Interface">
+      <UniqueIdentifier>{90166c15-bba7-41c4-8dff-f6a5780709f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine\Input\Event">
+      <UniqueIdentifier>{8b68dd81-8975-4ea9-b270-aa5422629960}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine\EventSystem">
+      <UniqueIdentifier>{dade24ab-f1b7-42ab-9603-f5592dd20fca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Engine\UI">
+      <UniqueIdentifier>{e8362556-7d7a-4dc8-bd4b-7f324ec237fb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\WallpaperWindow.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Graphics.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Transform.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Component.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SpriteRenderer.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Sprite.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Exception.h">
+      <Filter>src\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Texture.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Behaviour.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Matrix.h">
+      <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\winhead.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\typedef.h">
+      <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vector.h">
+      <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Interactable.h">
+      <Filter>src\Engine\Input\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IPointerClick.h">
+      <Filter>src\Engine\Input\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IPointerDown.h">
+      <Filter>src\Engine\Input\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IPointerMove.h">
+      <Filter>src\Engine\Input\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IPointerUp.h">
+      <Filter>src\Engine\Input\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IWheelScroll.h">
+      <Filter>src\Engine\Input\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Tachie.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Raycaster.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IDrag.h">
+      <Filter>src\Engine\Input\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameObject.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mouse.h">
+      <Filter>src\Engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MouseEventArg.h">
+      <Filter>src\Engine\Input\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Object.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EventSystem.h">
+      <Filter>src\Engine\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Button.h">
+      <Filter>src\Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Image.h">
+      <Filter>src\Engine\UI</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WallpaperWindow.cpp">
+      <Filter>src\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Graphics.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Application.cpp">
+      <Filter>src\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Transform.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Component.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SpriteRenderer.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Sprite.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderer.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Behaviour.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Matrix.cpp">
+      <Filter>src\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mouse.cpp">
+      <Filter>src\Engine\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Interactable.cpp">
+      <Filter>src\Engine\Input\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IPointerDown.cpp">
+      <Filter>src\Engine\Input\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Tachie.cpp">
+      <Filter>src\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Vector.cpp">
+      <Filter>src\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Raycaster.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IDrag.cpp">
+      <Filter>src\Engine\Input\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MouseEventArg.cpp">
+      <Filter>src\Engine\Input\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Object.cpp">
+      <Filter>src\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Image.cpp">
+      <Filter>src\Engine\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Button.cpp">
+      <Filter>src\Engine\UI</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE" />
+    <None Include="..\README" />
+  </ItemGroup>
+</Project>
