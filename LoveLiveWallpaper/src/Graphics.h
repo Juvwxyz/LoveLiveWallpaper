@@ -34,7 +34,8 @@ namespace LLWP
         static ComPtr<ID2D1Device> D2DDevice;
         static ComPtr<ID2D1DeviceContext> D2DContext;
         static ComPtr<ID2D1Factory1> D2DFactory;
-        static ComPtr<ID2D1SolidColorBrush> sBrush;
+        static ComPtr<ID2D1SolidColorBrush> blackBrush;
+        static ComPtr<ID2D1SolidColorBrush> whiteBrush;
 
         static ComPtr<IDWriteFactory> DwriteFactory;
         static ComPtr<IDWriteTextFormat> Dwriteformat;

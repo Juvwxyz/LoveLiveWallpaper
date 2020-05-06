@@ -4,6 +4,7 @@
 #include "EventSystem.h"
 
 #include <list>
+#include <chrono>
 
 namespace LLWP
 {
@@ -29,6 +30,11 @@ namespace LLWP
         StartEventHandler startEventHandler;
 
         WallpaperWindow wnd;
+
+        std::chrono::system_clock::duration deltaTime;
+        std::chrono::system_clock::time_point lastTime;
+        int framecount;
+        int framerate;
 
         static std::list<GameObject*> ObjectList_;
         static std::list<Renderer*> RenderList_;

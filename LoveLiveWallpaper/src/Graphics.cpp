@@ -14,7 +14,8 @@ namespace LLWP
     ComPtr<ID2D1DeviceContext> Graphics::D2DContext;
     ComPtr<ID2D1Factory1> Graphics::D2DFactory;
 
-    ComPtr<ID2D1SolidColorBrush> Graphics::sBrush;
+    ComPtr<ID2D1SolidColorBrush> Graphics::blackBrush;
+    ComPtr<ID2D1SolidColorBrush> Graphics::whiteBrush;
 
     ComPtr<IDWriteFactory> Graphics::DwriteFactory;
     ComPtr<IDWriteTextFormat> Graphics::Dwriteformat;
@@ -136,8 +137,8 @@ namespace LLWP
 
         D2DContext->SetTarget(targetBitmap.Get());
 
-        D2D1_COLOR_F color{ 1.f, 1.f, 1.f, 1.f };
-        hr = D2DContext->CreateSolidColorBrush(color, &sBrush);
+        hr = D2DContext->CreateSolidColorBrush({ 0.f, 0.f, 0.f, 1.f }, &blackBrush);
+        hr = D2DContext->CreateSolidColorBrush({ 1.f, 1.f, 1.f, 1.f }, &whiteBrush);
 
         hr = DWriteCreateFactory(
             DWRITE_FACTORY_TYPE_SHARED,
@@ -151,7 +152,7 @@ namespace LLWP
             DWRITE_FONT_WEIGHT_NORMAL,
             DWRITE_FONT_STYLE_NORMAL,
             DWRITE_FONT_STRETCH_NORMAL,
-            16.f,
+            24.f,
             L"",
             &Dwriteformat
         );

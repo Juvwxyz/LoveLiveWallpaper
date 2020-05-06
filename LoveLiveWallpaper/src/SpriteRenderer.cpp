@@ -32,7 +32,7 @@ namespace LLWP
         {
             Graphics::D2DContext->DrawRectangle(
                 D2D1_RECT_F{ 0 },
-                Graphics::sBrush.Get()
+                Graphics::whiteBrush.Get()
             );
         }
         else
