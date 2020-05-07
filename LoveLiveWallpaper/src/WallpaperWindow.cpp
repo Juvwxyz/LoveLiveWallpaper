@@ -1,9 +1,10 @@
 #include "Mouse.h"
 #include "WallpaperWindow.h"
-
+#include <VersionHelpers.h>
 namespace LLWP
 {
     HWND WallpaperWindow::hWnd = nullptr;
+    HMENU WallpaperWindow::hMenu = nullptr;
     HWND WallpaperWindow::workerw = nullptr;
     HWND WallpaperWindow::Progman = nullptr;
     HHOOK WallpaperWindow::mHook = nullptr;
@@ -31,8 +32,8 @@ namespace LLWP
             0,
             0,
             hInst,
-            nullptr,
-            nullptr,
+            LoadIconW(nullptr, MAKEINTRESOURCEW(IDI_APPLICATION)),
+            LoadCursorW(nullptr, MAKEINTRESOURCEW(IDC_ARROW)),
             CreateSolidBrush(0xffffff),
             nullptr,
             wndClassName,
@@ -53,24 +54,54 @@ namespace LLWP
 
         GetWorkerW();
 
-        SetParent(hWnd, workerw);
-        //SetParent(hWnd, Progman);
-
-        SetWindowPos(hWnd, workerw, 0, 0, screenX, screenY, 0);
-        //SetWindowPos(hWnd, Progman, 0, 0, screenX, screenY, 0);
-
-        SetWindowRgn(workerw, CreateRectRgn(0, 0, screenX, screenY), true);
+        if (IsWindows10OrGreater())
+        {
+            SetParent(hWnd, workerw);
+            SetWindowPos(hWnd, workerw, 0, 0, screenX, screenY, 0);
+            ShowWindow(workerw, SW_SHOW);
+            SetWindowRgn(workerw, CreateRectRgn(0, 0, screenX, screenY), true);
+        }
+        else if (IsWindows7SP1OrGreater())
+        {
+            SetParent(hWnd, Progman);
+            SetWindowPos(hWnd, Progman, 0, 0, screenX, screenY, 0);
+            ShowWindow(workerw, SW_HIDE);
+        }
+        else
+        {
+            MessageBoxW(NULL, L"不受支持的操作系统", L"LLWP Error", 0);
+            exit(0);
+        }
 
         ShowWindow(hWnd, SW_SHOWDEFAULT);
         UpdateWindow(hWnd);
+
+        NOTIFYICONDATAW nid
+        {
+            sizeof(NOTIFYICONDATAW),
+            hWnd,
+            0x0060,
+            NIF_TIP | NIF_ICON | NIF_MESSAGE | NIF_INFO,
+            0x1234,
+            LoadIconW(nullptr, MAKEINTRESOURCEW(IDI_APPLICATION)),
+            L"LoveLive! Wallpaper"
+        };
+
+        hMenu = CreatePopupMenu();
+
+        AppendMenuW(hMenu, MF_STRING, 0x0061, L"退出");
+
+        Shell_NotifyIconW(NIM_ADD, &nid);
         
-        mHook = SetWindowsHookExW(WH_MOUSE_LL, (HOOKPROC)MouseProc, GetModuleHandleW(nullptr), 0);
+        //mHook = SetWindowsHookExW(WH_MOUSE_LL, (HOOKPROC)MouseProc, GetModuleHandleW(nullptr), 0);
     }
 
     WallpaperWindow::~WallpaperWindow()
     {
-        //SetWindowRgn(workerw, CreateRectRgn(0,0,0,0), true);
-        ShowWindow(workerw, SW_HIDE);
+        if (IsWindows10OrGreater())
+        {
+            SetWindowRgn(workerw, CreateRectRgn(0, 0, 0, 0), true);
+        }
         UnregisterClassW(wndClassName, hInst);
         UnhookWindowsHookEx(mHook);
     }
@@ -89,6 +120,34 @@ namespace LLWP
 
     LRESULT CALLBACK WallpaperWindow::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
+        switch (msg)
+        {
+        case 0x1234:
+            switch (lParam)
+            {
+            case WM_RBUTTONDOWN:
+            case WM_LBUTTONDOWN:
+            {
+                POINT pt;
+                GetCursorPos(&pt);
+
+                SetForegroundWindow(hWnd);
+
+                int cmd = TrackPopupMenu(hMenu, TPM_RETURNCMD, pt.x, pt.y, NULL, hWnd, NULL);
+
+                if (cmd == 0x0061)
+                {
+                    PostQuitMessage(0);
+                }
+            }
+            break;
+            default:
+                break;
+            }
+            break;
+        default:
+            break;
+        }
         return DefWindowProcW(hWnd, msg, wParam, lParam);
     }
 
@@ -98,7 +157,6 @@ namespace LLWP
         PDWORD_PTR result = nullptr;
         SendMessageTimeoutW(Progman, 0x052c, 0x0, 0x0, SMTO_NORMAL, 5000, result);
         EnumWindows((WNDENUMPROC)EnumWindowsProc, 0x0);
-        ShowWindow(workerw, SW_SHOW);
     }
 
     BOOL WallpaperWindow::EnumWindowsProc(HWND tophandle, HWND topparahandle)
@@ -125,8 +183,7 @@ namespace LLWP
         case WM_MOUSEWHEEL:
             Mouse::ProcessMouseEvent(wPara, lParam);
             break;
-        case WM_MBUTTONDOWN:
-            PostQuitMessage(0);
+        default:
             break;
         }
 

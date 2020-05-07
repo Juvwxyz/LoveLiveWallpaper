@@ -71,4 +71,8 @@ namespace LLWP
     {
     }
 
+    Vector operator/(float f, Vector vec)
+    {
+        return Vector{ f / vec.x(), f / vec.y(), f / vec.z() };
+    }
 }

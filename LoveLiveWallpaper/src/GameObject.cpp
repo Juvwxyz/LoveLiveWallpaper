@@ -24,7 +24,7 @@ namespace LLWP
 
     bool GameObject::OnHitTest(const MouseEventArg& e)
     {
-        Raycaster* r = GetComponent<Raycaster>();
+        auto r = GetComponent<Raycaster>();
         if (r == nullptr)
         {
             return false;

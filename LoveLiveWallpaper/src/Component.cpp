@@ -4,7 +4,8 @@
 namespace LLWP
 {
     Component::Component(GameObject& o) :
-        obj_(o)
+        obj_(o),
+        _obj(o.weak_from_this())
     {
     }
 

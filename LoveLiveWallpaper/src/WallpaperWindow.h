@@ -23,6 +23,7 @@ namespace LLWP
         int screenX, screenY;
 
         static HWND hWnd;
+        static HMENU hMenu;
 
         static constexpr wchar_t wndClassName[] = L"LLWP";
         static constexpr wchar_t wndTitle[] = L"LoveLive! Wallpaper";

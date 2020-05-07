@@ -5,11 +5,10 @@
 
 #include <list>
 #include <chrono>
+#include <memory>
 
 namespace LLWP
 {
-    using StartEventHandler = Delegate<void()>;
-
     class GameObject;
     class Renderer;
 
@@ -19,15 +18,21 @@ namespace LLWP
         Application(HINSTANCE hInst, LPWSTR pArgs);
         ~Application();
 
+        static Event<Action<>> OnStart;
+        static Event<Action<>> OnUpdate;
+        static Event<Action<>> OnRender;
+
         void Run();
 
     private:
-        GameObject& mainTachie;
-        GameObject& pairTachie;
+        ::std::shared_ptr<GameObject> mainTachie;
+        ::std::shared_ptr<GameObject> pairTachie;
 
-        GameObject& settingButton;
+        ::std::shared_ptr<GameObject> settingButton;
 
-        StartEventHandler startEventHandler;
+        static Action<> startEventHandler;
+        static Action<> updateEventHandler;
+        static Action<> renderEventHandler;
 
         WallpaperWindow wnd;
 
@@ -36,26 +41,26 @@ namespace LLWP
         int framecount;
         int framerate;
 
-        static std::list<GameObject*> ObjectList_;
-        static std::list<Renderer*> RenderList_;
+        static std::list<::std::shared_ptr<GameObject>> ObjectList_;
+        //static std::list<::std::shared_ptr<Renderer>> RenderList_;
 
         void Update();
         void Render();
 
-        friend class Renderer;
+        //friend class Renderer;
 
         template<class OBJECT, class... Args>
-        friend OBJECT& CreateObject(Args&... args_);
+        friend ::std::shared_ptr<OBJECT> CreateObject(Args&&... args_);
 
         friend void DestroyObject(GameObject& obj);
     };
 
     template<class OBJECT = GameObject, class... Args>
-    OBJECT& CreateObject(Args&... args_)
+    ::std::shared_ptr<OBJECT> CreateObject(Args&&... args_)
     {
-        OBJECT* obj = new OBJECT(std::move(args_)...);
+        ::std::shared_ptr<OBJECT> obj = std::make_shared<OBJECT>(std::forward<Args&&>(args_)...);
         obj->self_ = Application::ObjectList_.insert(Application::ObjectList_.end(), obj);
-        return *obj;
+        return obj;
     }
 
     void DestroyObject(GameObject& obj);

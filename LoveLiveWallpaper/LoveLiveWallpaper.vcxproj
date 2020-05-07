@@ -41,6 +41,7 @@
     <ClInclude Include="src\Object.h" />
     <ClInclude Include="src\Raycaster.h" />
     <ClInclude Include="src\Renderer.h" />
+    <ClInclude Include="src\Rotater.h" />
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\SpriteRenderer.h" />
     <ClInclude Include="src\Tachie.h" />
@@ -78,8 +79,12 @@
     <ClCompile Include="src\WallpaperWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.gitignore" />
     <None Include="..\LICENSE" />
     <None Include="..\README" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\Assets\settingbutton.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

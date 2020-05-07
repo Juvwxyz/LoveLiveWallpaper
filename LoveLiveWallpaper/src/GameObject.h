@@ -12,7 +12,7 @@ namespace LLWP
     class Component;
     class MouseEventArg;
 
-    class GameObject
+    class GameObject : public ::std::enable_shared_from_this<GameObject>
     {
     public:
         GameObject();
@@ -25,33 +25,33 @@ namespace LLWP
         std::string name_;
         Transform transform_;
 
-        std::list<GameObject*>::iterator self_;
-        std::list<Component*> componentList_;
+        std::list<::std::shared_ptr<GameObject>>::iterator self_;
+        std::list<std::shared_ptr<Component>> componentList_;
 
         friend class Transform;
         template<class OBJECT, class... Args>
-        friend OBJECT& CreateObject(Args&... args_);
+        friend ::std::shared_ptr<OBJECT> CreateObject(Args&&... args_);
         friend void DestroyObject(GameObject& obj);
 
         bool OnHitTest(const MouseEventArg& e);
 
     public:
         template<class COMPONENT, class... Args>
-        COMPONENT& AddComponent(const Args&... args_)
+        ::std::shared_ptr<COMPONENT> AddComponent(const Args&... args_)
         {
-            COMPONENT* ptr = new COMPONENT(*this, args_...);
+            auto ptr = ::std::make_shared<COMPONENT>(*this, args_...);
             componentList_.push_back(ptr);
-            return *ptr;
+            return ptr;
         }
 
         template<class COMPONENT>
-        COMPONENT* GetComponent()
+        ::std::shared_ptr<COMPONENT> GetComponent()
         {
             for (auto com = componentList_.begin(); com != componentList_.end(); com++)
             {
                 if (typeid(**com) == typeid(COMPONENT))
                 {
-                    return reinterpret_cast<COMPONENT*>(*com);
+                    return ::std::dynamic_pointer_cast<COMPONENT, Component>(*com);
                 }
             }
             return nullptr;

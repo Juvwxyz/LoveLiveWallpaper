@@ -7,7 +7,6 @@ namespace LLWP
     {
     public:
         Renderer(GameObject& o);
-
     protected:
         virtual void Render() = 0;
         friend class Application;

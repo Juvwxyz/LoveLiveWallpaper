@@ -32,8 +32,5 @@ namespace LLWP
         float z_;
     };
 
-    inline Vector operator/(float f, Vector vec)
-    {
-        return Vector{ f / vec.x(), f / vec.y(), f / vec.z() };
-    }
+    Vector operator/(float f, Vector vec);
 }

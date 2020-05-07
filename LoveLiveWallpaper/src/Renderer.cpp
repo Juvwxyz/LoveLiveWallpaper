@@ -5,6 +5,6 @@ namespace LLWP
     LLWP::Renderer::Renderer(GameObject& o) :
         Component(o)
     {
-        Application::RenderList_.push_back(this);
+        Application::OnRender += (*this, &Renderer::Render);
     }
 }

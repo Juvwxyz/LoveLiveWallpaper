@@ -1,5 +1,5 @@
 #pragma once
-#include <string>
+#include <memory>
 
 namespace LLWP
 {
@@ -7,7 +7,7 @@ namespace LLWP
     class Transform;
     class GameObject;
 
-    class Component
+    class Component : public ::std::enable_shared_from_this<Component>
     {
     public:
         Component(GameObject & o);
@@ -18,6 +18,7 @@ namespace LLWP
         virtual ~Component();
     protected:
         GameObject& obj_;
+        ::std::weak_ptr<GameObject> _obj;
 
     };
 }

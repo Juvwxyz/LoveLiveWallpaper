@@ -160,4 +160,6 @@ namespace LLWP
         Delegate<TR(TA...)>& event_handler;
     };
 
+    template<class... TA>
+    using Action = Delegate<void(TA...)>;
 }
