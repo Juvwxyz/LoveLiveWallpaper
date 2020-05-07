@@ -15,6 +15,10 @@ namespace LLWP
         
     }
 
+    void Tachie::Update()
+    {
+    }
+
 
 
     void Tachie::OnDrag(const MouseEventArg& e)

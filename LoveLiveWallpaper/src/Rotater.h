@@ -14,14 +14,14 @@ namespace LLWP
     public:
         Rotater(GameObject& obj) : Behaviour(obj) {};
 
-        virtual void Start() override
+        void Start() override
         {
             last = ::std::chrono::system_clock::now();
         }
 
-        virtual void Update() override
+        void Update() override
         {
-            auto delta = ::std::chrono::duration_cast<::std::chrono::milliseconds>(::std::chrono::system_clock::now() - last).count();
+            auto delta = ::std::chrono::duration_cast<::std::chrono::microseconds>(::std::chrono::system_clock::now() - last).count();
             this->transform().Rotate((float)delta / 100);
         
         }

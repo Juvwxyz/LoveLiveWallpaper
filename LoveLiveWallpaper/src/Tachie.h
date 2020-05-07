@@ -10,6 +10,7 @@ namespace LLWP
         Tachie(GameObject& o);
 
         virtual void Start() override;
+        virtual void Update() override;
 
     protected:
         virtual void OnDrag(const MouseEventArg& e) override;

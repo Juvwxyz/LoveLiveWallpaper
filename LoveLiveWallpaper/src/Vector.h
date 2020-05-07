@@ -18,6 +18,7 @@ namespace LLWP
         float y() const;
         float z() const;
 
+        Vector operator+(const Vector& right);
         void operator+=(const Vector& d);
 
         Vector& operator*=(const Matrix& m);
@@ -33,4 +34,5 @@ namespace LLWP
     };
 
     Vector operator/(float f, Vector vec);
+    Vector operator/(Vector vec, float f);
 }

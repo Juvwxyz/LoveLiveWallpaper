@@ -34,7 +34,12 @@ namespace LLWP
         return z_;
     }
 
-	void Vector::operator+=(const Vector& d)
+    Vector Vector::operator+(const Vector& right)
+    {
+        return Vector{ x() + right.x(),y() + right.y(), z() + right.z() };
+    }
+
+    void Vector::operator+=(const Vector& d)
 	{
         x_ += d.x_;
         y_ += d.y_;
@@ -74,5 +79,10 @@ namespace LLWP
     Vector operator/(float f, Vector vec)
     {
         return Vector{ f / vec.x(), f / vec.y(), f / vec.z() };
+    }
+
+    Vector operator/(Vector vec, float f)
+    {
+        return Vector{ vec.x() / f, vec.y() / f, vec.z() / f };
     }
 }
