@@ -21,6 +21,7 @@ namespace LLWP
         Vector operator+(const Vector& right);
         void operator+=(const Vector& d);
 
+        Vector& operator*=(float s);
         Vector& operator*=(const Matrix& m);
         Vector operator*(const Matrix& m);
 

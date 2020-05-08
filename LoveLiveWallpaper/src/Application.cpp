@@ -26,6 +26,8 @@ namespace LLWP
     Application::Application(HINSTANCE hInst, LPWSTR pArgs) :
         mainTachie(CreateObject("MainTachie")),
         pairTachie(CreateObject("PairTachie")),
+        innerCircle(CreateObject("InnerCircle")),
+        outerCircle(CreateObject("OuterCircle")),
         settingButton(CreateObject("SettingButton")),
         deltaTime(0),
         lastTime(system_clock::now()),
@@ -34,6 +36,18 @@ namespace LLWP
         wnd(hInst, pArgs)
     {
         Graphics::Init(wnd);
+
+        innerCircle->AddComponent<SpriteRenderer>(L"Assets\\InnerCircle.png");
+        auto r = innerCircle->AddComponent<Rotater>();
+        r->setSpeed(-30);
+        innerCircle->tranform().Move(672, -228);
+        innerCircle->tranform().Size() = { 1576, 1576 };
+
+        outerCircle->AddComponent<SpriteRenderer>(L"Assets\\OuterCircle.png");
+        r = outerCircle->AddComponent<Rotater>();
+        r->setSpeed(30);
+        outerCircle->tranform().Move(672, -228);
+        outerCircle->tranform().Size() = { 1576, 1576 };
 
         mainTachie->tranform().Size() = { 1024,1024 };
 
@@ -44,7 +58,7 @@ namespace LLWP
 
         pairTachie->tranform().Size() = { 1024,1024 };
 
-        pairTachie->AddComponent<SpriteRenderer>(L"Assets\\u_normal_navi_43001003.png");
+        pairTachie->AddComponent<SpriteRenderer>(L"Assets\\u_normal_navi_32009012.png");
         pairTachie->AddComponent<Raycaster>();
         pairTachie->AddComponent<Tachie>();
         pairTachie->tranform().Move(900, 28);
@@ -72,9 +86,9 @@ namespace LLWP
 
     void Application::Run()
     {
-        while (wnd.ProcessMessage())
+        startEventHandler.invoke();
+        while (!wnd.isExitting)
         {
-            startEventHandler.invoke();
             Update();
             Render();
         }
@@ -85,14 +99,7 @@ namespace LLWP
         Graphics::D2DContext->Clear(D2D1_COLOR_F{ 0.5f, 0.5f ,0.5f ,1.0f });
 
         renderEventHandler.invoke();
-        //for (auto render = RenderList_.begin(); render !=   RenderList_.end(); render++)
-        //{
-        //    (*render)->Render();
-        //}
-        //Graphics::D2DContext->FillRectangle(
-        //    { 1850, 20,1914,52 },
-        //    Graphics::blackBrush.Get()
-        //);
+
         auto a = std::to_wstring(framerate);
         Graphics::D2DContext->DrawTextW(
             a.c_str(),
@@ -110,7 +117,7 @@ namespace LLWP
             lastTime = system_clock::now();
         }
         Graphics::D2DContext->EndDraw();
-        Graphics::DXGISwapChain->Present(0, 0);
+        Graphics::DXGISwapChain->Present(1, 0);
     }
     void DestroyObject(GameObject& obj)
     {

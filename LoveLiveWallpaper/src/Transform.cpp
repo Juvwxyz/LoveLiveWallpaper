@@ -89,6 +89,13 @@ namespace LLWP
         worldToLocalMatrix = Matrix(1/scale_, -rotation_, -position_);
     }
 
+    void Transform::ScaleBy(float s)
+    {
+        scale_ *= s;
+        localToWorldMatrix = Matrix(scale_, rotation_, position_);
+        worldToLocalMatrix = Matrix(1 / scale_, -rotation_, -position_);
+    }
+
     void Transform::Rotate(float angle)
     {
         rotation_ += angle;

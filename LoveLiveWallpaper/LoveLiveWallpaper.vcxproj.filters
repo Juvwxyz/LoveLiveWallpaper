@@ -31,9 +31,6 @@
     <Filter Include="src\Engine\UI">
       <UniqueIdentifier>{e8362556-7d7a-4dc8-bd4b-7f324ec237fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="asset">
-      <UniqueIdentifier>{7719a860-d096-4f1d-966c-e46d3d94aed5}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\WallpaperWindow.h">
@@ -213,6 +210,6 @@
     <None Include="..\.gitignore" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\Assets\settingbutton.png" />
+    <Manifest Include="app.manifest" />
   </ItemGroup>
 </Project>

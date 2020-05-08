@@ -14,13 +14,17 @@ namespace LLWP
         bool ProcessMessage();
         HWND hwnd() const { return hWnd; }
 
+        static void CaptureMouse();
+
     private:
 
         HINSTANCE hInst;
         MSG msg;
         RECT wr;
+        NOTIFYICONDATAW nid;
 
         int screenX, screenY;
+        bool isExitting;
 
         static HWND hWnd;
         static HMENU hMenu;
@@ -39,6 +43,8 @@ namespace LLWP
         static BOOL CALLBACK EnumWindowsProc(HWND tophandle, HWND topparahandle);
 
         static void GetWorkerW();
+
+        friend class Application;
     };
 
 }

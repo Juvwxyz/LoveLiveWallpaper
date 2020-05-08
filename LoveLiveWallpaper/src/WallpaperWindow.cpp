@@ -11,7 +11,8 @@ namespace LLWP
 
     WallpaperWindow::WallpaperWindow(HINSTANCE hInst, LPWSTR pArgs) :
         hInst(hInst),
-        msg{ 0 }
+        msg{ 0 },
+        isExitting(false)
     {
         DISPLAY_DEVICEW displayDevice{ sizeof(DISPLAY_DEVICEW) };
 
@@ -76,7 +77,7 @@ namespace LLWP
         ShowWindow(hWnd, SW_SHOWDEFAULT);
         UpdateWindow(hWnd);
 
-        NOTIFYICONDATAW nid
+        nid =
         {
             sizeof(NOTIFYICONDATAW),
             hWnd,
@@ -90,6 +91,7 @@ namespace LLWP
         hMenu = CreatePopupMenu();
 
         AppendMenuW(hMenu, MF_STRING, 0x0061, L"ÍË³ö");
+        AppendMenuW(hMenu, MF_STRING, 0x0062, L"¹ØÓÚ");
 
         Shell_NotifyIconW(NIM_ADD, &nid);
         
@@ -108,14 +110,18 @@ namespace LLWP
 
     bool WallpaperWindow::ProcessMessage()
     {
-        PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE);
-        TranslateMessage(&msg);
-        DispatchMessageW(&msg);
-        if (msg.message == WM_QUIT)
+        if (GetMessageW(&msg, nullptr, 0, 0))
         {
+            TranslateMessage(&msg);
+            DispatchMessageW(&msg);
+            return true;
+        }
+        else
+        {
+            Shell_NotifyIconW(NIM_DELETE, &nid);
+            isExitting = true;
             return false;
         }
-        return true;
     }
 
     LRESULT CALLBACK WallpaperWindow::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -123,15 +129,15 @@ namespace LLWP
         switch (msg)
         {
         case 0x1234:
+        {
             switch (lParam)
             {
-            case WM_RBUTTONDOWN:
-            case WM_LBUTTONDOWN:
+            case WM_RBUTTONUP:
             {
                 POINT pt;
                 GetCursorPos(&pt);
 
-                SetForegroundWindow(hWnd);
+                SetForegroundWindow(WallpaperWindow::hWnd);
 
                 int cmd = TrackPopupMenu(hMenu, TPM_RETURNCMD, pt.x, pt.y, NULL, hWnd, NULL);
 
@@ -139,11 +145,16 @@ namespace LLWP
                 {
                     PostQuitMessage(0);
                 }
+                else if (cmd == 0x0062)
+                {
+                    MessageBoxW(WallpaperWindow::hWnd, L"LoveLive! Wallpaper\nversion 0.0.0.1", L"About LoveLive! Wallpaper", 0);
+                }
             }
             break;
             default:
                 break;
             }
+        }
             break;
         default:
             break;
@@ -157,6 +168,11 @@ namespace LLWP
         PDWORD_PTR result = nullptr;
         SendMessageTimeoutW(Progman, 0x052c, 0x0, 0x0, SMTO_NORMAL, 5000, result);
         EnumWindows((WNDENUMPROC)EnumWindowsProc, 0x0);
+    }
+
+    void WallpaperWindow::CaptureMouse()
+    {
+        mHook = SetWindowsHookExW(WH_MOUSE_LL, (HOOKPROC)MouseProc, GetModuleHandleW(nullptr), 0);
     }
 
     BOOL WallpaperWindow::EnumWindowsProc(HWND tophandle, HWND topparahandle)

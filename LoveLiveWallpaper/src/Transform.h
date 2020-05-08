@@ -35,6 +35,7 @@ namespace LLWP
         //void setPosition(const Vector& v);
         //Vector getPosition();
         void Move(float x, float y);
+        void ScaleBy(float s);
         void Rotate(float angle);
 
         ~Transform();

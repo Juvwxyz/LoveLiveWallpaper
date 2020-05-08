@@ -46,6 +46,14 @@ namespace LLWP
         z_ += d.z_;
 	}
 
+    Vector& Vector::operator*=(float s)
+    {
+        x_ *= s;
+        y_ *= s;
+        z_ *= s;
+        return *this;
+    }
+
     Vector& Vector::operator*=(const Matrix& m)
     {
         float tx = x_ * m(0, 0) + y_ * m(1, 0) + z_ * m(2, 0) + m(3, 0);

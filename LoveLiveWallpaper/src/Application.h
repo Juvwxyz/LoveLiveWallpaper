@@ -24,9 +24,16 @@ namespace LLWP
 
         void Run();
 
+        void Update();
+        void Render();
+
+        WallpaperWindow wnd;
+
     private:
         ::std::shared_ptr<GameObject> mainTachie;
         ::std::shared_ptr<GameObject> pairTachie;
+        ::std::shared_ptr<GameObject> innerCircle;
+        ::std::shared_ptr<GameObject> outerCircle;
 
         ::std::shared_ptr<GameObject> settingButton;
 
@@ -34,20 +41,12 @@ namespace LLWP
         static Action<> updateEventHandler;
         static Action<> renderEventHandler;
 
-        WallpaperWindow wnd;
-
-        std::chrono::system_clock::duration deltaTime;
-        std::chrono::system_clock::time_point lastTime;
+        ::std::chrono::system_clock::duration deltaTime;
+        ::std::chrono::system_clock::time_point lastTime;
         int framecount;
         int framerate;
 
-        static std::list<::std::shared_ptr<GameObject>> ObjectList_;
-        //static std::list<::std::shared_ptr<Renderer>> RenderList_;
-
-        void Update();
-        void Render();
-
-        //friend class Renderer;
+        static ::std::list<::std::shared_ptr<GameObject>> ObjectList_;
 
         template<class OBJECT, class... Args>
         friend ::std::shared_ptr<OBJECT> CreateObject(Args&&... args_);

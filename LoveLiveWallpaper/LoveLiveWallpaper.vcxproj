@@ -84,7 +84,7 @@
     <None Include="..\README" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\Assets\settingbutton.png" />
+    <Manifest Include="app.manifest" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

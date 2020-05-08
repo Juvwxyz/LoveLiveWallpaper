@@ -4,7 +4,7 @@
 
 #include <cmath>
 
-#define arc(x) (x / 180.f * 3.141592653589793f)
+#define arc(x) (float)(x / 180 * 3.141592653589793)
 
 namespace LLWP
 {

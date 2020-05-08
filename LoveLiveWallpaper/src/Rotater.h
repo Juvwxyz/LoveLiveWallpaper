@@ -11,8 +11,11 @@ namespace LLWP
     class Rotater : public Behaviour
     {
         ::std::chrono::system_clock::time_point last;
+        float _angularSpeed;
     public:
-        Rotater(GameObject& obj) : Behaviour(obj) {};
+        Rotater(GameObject& obj) : Behaviour(obj), _angularSpeed(0) {};
+
+        void setSpeed(float s) { _angularSpeed = s; }
 
         void Start() override
         {
@@ -21,9 +24,9 @@ namespace LLWP
 
         void Update() override
         {
-            auto delta = ::std::chrono::duration_cast<::std::chrono::microseconds>(::std::chrono::system_clock::now() - last).count();
-            this->transform().Rotate((float)delta / 100);
-        
+            auto delta = ::std::chrono::duration_cast<::std::chrono::nanoseconds>(::std::chrono::system_clock::now() - last).count();
+            last = ::std::chrono::system_clock::now();
+            this->transform().Rotate(_angularSpeed * delta * 1e-9);
         }
     };
 }
