@@ -22,6 +22,7 @@ namespace LLWP
 
     ComPtr<ID3D11Device> Graphics::D3DDevice;
     ComPtr<ID3D11DeviceContext> Graphics::D3DContext;
+    ComPtr<ID3D11RenderTargetView> Graphics::D3DRenderTargetView;
 
     ComPtr<IDXGIAdapter> Graphics::DXGIAdapter;
     ComPtr<IDXGIDevice1> Graphics::DXGIDevice;
@@ -63,7 +64,7 @@ namespace LLWP
             nullptr,
             D3D_DRIVER_TYPE_HARDWARE,
             0,
-            D3D11_CREATE_DEVICE_BGRA_SUPPORT,
+            D3D11_CREATE_DEVICE_BGRA_SUPPORT | D3D11_CREATE_DEVICE_DEBUG,
             featureLevels,
             7,
             D3D11_SDK_VERSION,
@@ -71,6 +72,7 @@ namespace LLWP
             &r_featureLevel,
             &D3DContext
         );
+
 
         hr = D3DDevice.As(&DXGIDevice);
 
@@ -119,6 +121,28 @@ namespace LLWP
             0,
             IID_PPV_ARGS(&backBuffer)
         );
+
+        ComPtr<ID3D11Resource> pBackBuffer;
+        hr = DXGISwapChain->GetBuffer(
+            0,
+            __uuidof(ID3D11Texture2D),
+            &pBackBuffer);
+
+        hr = D3DDevice->CreateRenderTargetView(
+            pBackBuffer.Get(),
+            nullptr,
+            &D3DRenderTargetView);
+
+        D3DContext->OMSetRenderTargets(1, D3DRenderTargetView.GetAddressOf(), nullptr);
+
+        D3D11_VIEWPORT vp;
+        vp.Width = float(1920);
+        vp.Height = float(1080);
+        vp.MinDepth = 0.0f;
+        vp.MaxDepth = 1.0f;
+        vp.TopLeftX = 0.0f;
+        vp.TopLeftY = 0.0f;
+        D3DContext->RSSetViewports(1, &vp);
 
         D2D1_BITMAP_PROPERTIES1 bitmapProp;
 

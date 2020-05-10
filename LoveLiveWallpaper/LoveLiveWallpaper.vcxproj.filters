@@ -31,6 +31,9 @@
     <Filter Include="src\Engine\UI">
       <UniqueIdentifier>{e8362556-7d7a-4dc8-bd4b-7f324ec237fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Engine\Shader">
+      <UniqueIdentifier>{3d9c083a-55b9-460e-98e3-dc130a4ff9bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\WallpaperWindow.h">
@@ -206,10 +209,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE" />
-    <None Include="..\README" />
     <None Include="..\.gitignore" />
+    <None Include="..\README.md" />
+    <None Include="src\SpriteVertexShader.shh">
+      <Filter>src\Engine\Shader</Filter>
+    </None>
+    <None Include="src\SpritePixelShader.shh">
+      <Filter>src\Engine\Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\SpriteVertexShader.hlsl">
+      <Filter>src\Engine\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="src\SpritePixelShader.hlsl">
+      <Filter>src\Engine\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

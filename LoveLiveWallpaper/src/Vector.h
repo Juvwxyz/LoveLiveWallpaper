@@ -1,5 +1,5 @@
 #pragma once
-
+#include <DirectXMath.h>
 
 namespace LLWP
 {
@@ -9,29 +9,27 @@ namespace LLWP
     {
     public :
         Vector(float a = 0, float b = 0, float c = 0);
-
-        float& x();
-        float& y();
-        float& z();
+        Vector(DirectX::FXMVECTOR& m);
 
         float x() const;
         float y() const;
         float z() const;
 
-        Vector operator+(const Vector& right);
-        void operator+=(const Vector& d);
+        operator DirectX::XMVECTOR();
 
+        Vector operator+(const Vector& right);
+        Vector& operator+=(const Vector& d);
+
+        Vector operator*(const Matrix& m);
         Vector& operator*=(float s);
         Vector& operator*=(const Matrix& m);
-        Vector operator*(const Matrix& m);
 
         Vector operator-();
 
         ~Vector();
+
     private:
-        float x_;
-        float y_;
-        float z_;
+        DirectX::XMVECTOR vec;
     };
 
     Vector operator/(float f, Vector vec);

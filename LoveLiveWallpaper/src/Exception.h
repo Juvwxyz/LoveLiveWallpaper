@@ -3,16 +3,15 @@
 
 namespace LLWP
 {
-    class Exception
+    class NullReferenceException : public ::std::exception
     {
     public:
-
-    protected:
-
+        NullReferenceException() : ::std::exception("NullReferenceException", 1) {}
     };
 
-    class NullReferenceException : public Exception
+    class IndexOutofRangeException : public ::std::exception
     {
-
+    public:
+        IndexOutofRangeException() : ::std::exception("IndexOutofRangeException", 1) {}
     };
 }

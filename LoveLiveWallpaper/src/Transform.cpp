@@ -1,3 +1,5 @@
+#include "Transform.h"
+
 #include "GameObject.h"
 
 namespace LLWP
@@ -15,8 +17,8 @@ namespace LLWP
         localScale_{ 1,1 },
         locaRotation(0),
         localToParentMatrix(localScale_, locaRotation, localPosition_)
-    {
-    }
+    {}
+
     Transform::Transform(const Transform& t):
         obj(t.obj)
     {

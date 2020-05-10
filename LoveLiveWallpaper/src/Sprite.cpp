@@ -5,20 +5,28 @@
 namespace LLWP
 {
     Sprite::Sprite() :
-        texture_(new Texture())
+        _texture(nullptr)
     {
 
     }
+
     Sprite::Sprite(const wchar_t* path) :
-        texture_(new Texture(path))
+        _texture(::std::make_shared<Texture>(path))
     {
     }
-    Texture& Sprite::texture()
+
+    const Texture& Sprite::texture() const
     {
-        return *texture_;
+        return *_texture;
     }
+
+    ::std::shared_ptr<Texture>& Sprite::texture()
+    {
+        return _texture;
+    }
+
     Sprite::~Sprite()
     {
-        delete texture_;
+
     }
 }

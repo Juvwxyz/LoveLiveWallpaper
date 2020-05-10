@@ -44,6 +44,7 @@ namespace LLWP
 
         static ComPtr<ID3D11Device> D3DDevice;
         static ComPtr<ID3D11DeviceContext> D3DContext;
+        static ComPtr<ID3D11RenderTargetView> D3DRenderTargetView;
 
         static ComPtr<IDXGIAdapter> DXGIAdapter;
         static ComPtr<IDXGIDevice1> DXGIDevice;

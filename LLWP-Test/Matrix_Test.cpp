@@ -9,25 +9,25 @@ public:
     Matrix m1;
 
     Matrix m2 = LLWP::Matrix
-    ({
+    (
         1,0,0,1,
         0,1,0,1,
         0,0,1,0,
         0,0,0,1
-    });
+    );
 
     Matrix m3 = m1;
     Matrix m4 = std::move(m2);
 
     Matrix ma = LLWP::Matrix
-    ({
+    (D2D1_MATRIX_4X4_F{
         1,  2, 3, 4,
         5,  6, 7, 8,
         9, 10,11,12,
         13,14,15,16
     });
     Matrix mb = LLWP::Matrix
-    ({
+    (D2D1_MATRIX_4X4_F{
         1,1,1,1,
         1,1,1,1,
         1,1,1,1,

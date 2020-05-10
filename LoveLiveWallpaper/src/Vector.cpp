@@ -1,83 +1,70 @@
 #include "Vector.h"
 #include "Matrix.h"
 
+using namespace ::DirectX;
+
 namespace LLWP
 {
     Vector::Vector(float a, float b, float c):
-        x_(a), y_(b), z_(c)
+        vec{ a, b, c, 1 }
     {
     }
 
-    float& Vector::x()
+    Vector::Vector(DirectX::FXMVECTOR& v) : vec(v)
     {
-        return x_;
-    }
-    float& Vector::y()
-    {
-        return y_;
-    }
-    float& Vector::z()
-    {
-        return z_;
     }
 
     float Vector::x() const
     {
-        return x_;
+        return DirectX::XMVectorGetX(vec);
     }
+
     float Vector::y() const
     {
-        return y_;
+        return DirectX::XMVectorGetY(vec);
     }
+
     float Vector::z() const
     {
-        return z_;
+        return DirectX::XMVectorGetZ(vec);
+    }
+
+    Vector::operator DirectX::XMVECTOR()
+    {
+        return vec;
     }
 
     Vector Vector::operator+(const Vector& right)
     {
-        return Vector{ x() + right.x(),y() + right.y(), z() + right.z() };
+        return XMVectorAdd(vec, right.vec);
     }
 
-    void Vector::operator+=(const Vector& d)
+    Vector& Vector::operator+=(const Vector& d)
 	{
-        x_ += d.x_;
-        y_ += d.y_;
-        z_ += d.z_;
+        vec = XMVectorAdd(vec, d.vec);
+        return *this;
 	}
 
     Vector& Vector::operator*=(float s)
     {
-        x_ *= s;
-        y_ *= s;
-        z_ *= s;
+        vec = XMVectorScale(vec, s);
         return *this;
     }
 
     Vector& Vector::operator*=(const Matrix& m)
     {
-        float tx = x_ * m(0, 0) + y_ * m(1, 0) + z_ * m(2, 0) + m(3, 0);
-        float ty = x_ * m(0, 1) + y_ * m(1, 1) + z_ * m(2, 1) + m(3, 1);
-        float tz = x_ * m(0, 2) + y_ * m(1, 2) + z_ * m(2, 2) + m(3, 2);
-        x_ = tx;
-        y_ = ty;
-        z_ = tz;
+        vec = XMVector3Transform(vec, m);
         return *this;
     }
 
     Vector Vector::operator*(const Matrix& m)
     {
-        return Vector
-        {
-            x_* m(0, 0) + y_ * m(1, 0) + z_ * m(2, 0) + m(3, 0),
-            x_* m(0, 1) + y_ * m(1, 1) + z_ * m(2, 1) + m(3, 1),
-            x_* m(0, 2) + y_ * m(1, 2) + z_ * m(2, 2) + m(3, 2)
-        };
+        return DirectX::XMVector3Transform(*this, m);
     }
 
 	Vector Vector::operator-()
 	{
-        return Vector(-x_, -y_, -z_);
+        return XMVectorScale(vec, -1);
 	}
 
     Vector::~Vector()
@@ -91,6 +78,6 @@ namespace LLWP
 
     Vector operator/(Vector vec, float f)
     {
-        return Vector{ vec.x() / f, vec.y() / f, vec.z() / f };
+        return XMVectorScale(vec, 1.f / f);
     }
 }

@@ -1,19 +1,23 @@
 #pragma once
 #include "Texture.h"
 
+#include <memory>
+
 namespace LLWP
 {
-    class Sprite
+    class Sprite : public ::std::enable_shared_from_this<Sprite>
     {
     public:
         Sprite();
         Sprite(const wchar_t* path);
 
-        Texture& texture();
+        const Texture& texture() const;
+        ::std::shared_ptr<Texture>& texture();
+
 
         ~Sprite();
     protected:
-        Texture* texture_;
+        ::std::shared_ptr<Texture> _texture;
         friend class SpriteRenderer;
     };
 }
