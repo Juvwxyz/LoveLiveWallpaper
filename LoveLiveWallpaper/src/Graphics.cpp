@@ -1,5 +1,6 @@
 #include "Graphics.h"
 
+#include "Exception.h"
 #include "WallpaperWindow.h"
 
 namespace LLWP
@@ -23,11 +24,13 @@ namespace LLWP
     ComPtr<ID3D11Device> Graphics::D3DDevice;
     ComPtr<ID3D11DeviceContext> Graphics::D3DContext;
     ComPtr<ID3D11RenderTargetView> Graphics::D3DRenderTargetView;
+    ComPtr<ID3D11BlendState> Graphics::D3DBlendState;
 
     ComPtr<IDXGIAdapter> Graphics::DXGIAdapter;
     ComPtr<IDXGIDevice1> Graphics::DXGIDevice;
     ComPtr<IDXGIFactory2> Graphics::DXGIFactory;
-    ComPtr<IDXGISurface> Graphics::backBuffer;
+    ComPtr<IDXGISurface> Graphics::backBufferSurface;
+    ComPtr<ID3D11Texture2D> Graphics::backBufferTexture;
     ComPtr<IDXGISwapChain1> Graphics::DXGISwapChain;
 
     HRESULT Graphics::Init(const WallpaperWindow& wnd)
@@ -35,6 +38,7 @@ namespace LLWP
         HRESULT hr = S_OK;
 
         hr = CoInitialize(NULL);
+        if (hr != S_OK) return hr;
 
         hr = CoCreateInstance(
             CLSID_WICImagingFactory,
@@ -42,11 +46,13 @@ namespace LLWP
             CLSCTX_INPROC_SERVER,
             IID_PPV_ARGS(&WICFactory)
         );
+        if (hr != S_OK) return hr;
 
         hr = D2D1CreateFactory(
             D2D1_FACTORY_TYPE_MULTI_THREADED,
             D2DFactory.GetAddressOf()
         );
+        if (hr != S_OK) return hr;
 
         D3D_FEATURE_LEVEL featureLevels[]{
             D3D_FEATURE_LEVEL_11_1,
@@ -72,19 +78,23 @@ namespace LLWP
             &r_featureLevel,
             &D3DContext
         );
+        if (hr != S_OK) return hr;
 
 
         hr = D3DDevice.As(&DXGIDevice);
+        if (hr != S_OK) return hr;
 
         hr = D2DFactory->CreateDevice(
             DXGIDevice.Get(),
             &D2DDevice
         );
+        if (hr != S_OK) return hr;
 
         hr = D2DDevice->CreateDeviceContext(
             D2D1_DEVICE_CONTEXT_OPTIONS_ENABLE_MULTITHREADED_OPTIMIZATIONS,
             &D2DContext
         );
+        if (hr != S_OK) return hr;
 
         DXGI_SWAP_CHAIN_DESC1 swapChainDesc;
         swapChainDesc.Width = 0;
@@ -101,10 +111,12 @@ namespace LLWP
         swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
 
         hr = DXGIDevice->GetAdapter(&DXGIAdapter);
+        if (hr != S_OK) return hr;
 
         hr = DXGIAdapter->GetParent(
             IID_PPV_ARGS(&DXGIFactory)
         );
+        if (hr != S_OK) return hr;
 
         hr = DXGIFactory->CreateSwapChainForHwnd(
             D3DDevice.Get(),
@@ -114,26 +126,30 @@ namespace LLWP
             nullptr,
             &DXGISwapChain
         );
+        if (hr != S_OK) return hr;
 
         hr = DXGIDevice->SetMaximumFrameLatency(1);
+        if (hr != S_OK) return hr;
 
         hr = DXGISwapChain->GetBuffer(
             0,
-            IID_PPV_ARGS(&backBuffer)
+            IID_PPV_ARGS(&backBufferSurface)
         );
+        if (hr != S_OK) return hr;
 
-        ComPtr<ID3D11Resource> pBackBuffer;
         hr = DXGISwapChain->GetBuffer(
             0,
             __uuidof(ID3D11Texture2D),
-            &pBackBuffer);
+            &backBufferTexture
+        );
+        if (hr != S_OK) return hr;
 
         hr = D3DDevice->CreateRenderTargetView(
-            pBackBuffer.Get(),
+            backBufferTexture.Get(),
             nullptr,
-            &D3DRenderTargetView);
-
-        D3DContext->OMSetRenderTargets(1, D3DRenderTargetView.GetAddressOf(), nullptr);
+            &D3DRenderTargetView
+        );
+        if (hr != S_OK) return hr;
 
         D3D11_VIEWPORT vp;
         vp.Width = float(1920);
@@ -143,6 +159,23 @@ namespace LLWP
         vp.TopLeftX = 0.0f;
         vp.TopLeftY = 0.0f;
         D3DContext->RSSetViewports(1, &vp);
+
+        D3D11_BLEND_DESC blendDesc;
+        blendDesc.AlphaToCoverageEnable = false;
+        blendDesc.IndependentBlendEnable = false;
+        blendDesc.RenderTarget[0].BlendEnable = true;
+        blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+        blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+        blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+        blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+        blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
+        blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+        blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+        hr = D3DDevice->CreateBlendState(&blendDesc, &D3DBlendState);
+        if (hr != S_OK) return hr;
+
+        D3DContext->OMSetBlendState(D3DBlendState.Get(), nullptr, 0xffffffff);
 
         D2D1_BITMAP_PROPERTIES1 bitmapProp;
 
@@ -154,21 +187,25 @@ namespace LLWP
         bitmapProp.colorContext = nullptr;
 
         hr = D2DContext->CreateBitmapFromDxgiSurface(
-            backBuffer.Get(),
+            backBufferSurface.Get(),
             &bitmapProp,
             &targetBitmap
         );
+        if (hr != S_OK) return hr;
 
         D2DContext->SetTarget(targetBitmap.Get());
 
         hr = D2DContext->CreateSolidColorBrush({ 0.f, 0.f, 0.f, 1.f }, &blackBrush);
+        if (hr != S_OK) return hr;
         hr = D2DContext->CreateSolidColorBrush({ 1.f, 1.f, 1.f, 1.f }, &whiteBrush);
+        if (hr != S_OK) return hr;
 
         hr = DWriteCreateFactory(
             DWRITE_FACTORY_TYPE_SHARED,
             __uuidof(IDWriteFactory),
             &DwriteFactory
         );
+        if (hr != S_OK) return hr;
 
         hr = DwriteFactory->CreateTextFormat(
             L"Input",
@@ -180,9 +217,8 @@ namespace LLWP
             L"",
             &Dwriteformat
         );
-
-
-        return hr;
+        if (hr != S_OK) return hr;
+        return S_OK;
     }
 
     HRESULT LoadBitMap(LPCWSTR path, ID2D1Bitmap** ppBitmap, IWICBitmapSource** source)

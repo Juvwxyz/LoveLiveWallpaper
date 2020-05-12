@@ -45,11 +45,13 @@ namespace LLWP
         static ComPtr<ID3D11Device> D3DDevice;
         static ComPtr<ID3D11DeviceContext> D3DContext;
         static ComPtr<ID3D11RenderTargetView> D3DRenderTargetView;
+        static ComPtr<ID3D11BlendState> D3DBlendState;
 
         static ComPtr<IDXGIAdapter> DXGIAdapter;
         static ComPtr<IDXGIDevice1> DXGIDevice;
         static ComPtr<IDXGIFactory2> DXGIFactory;
-        static ComPtr<IDXGISurface> backBuffer;
+        static ComPtr<IDXGISurface> backBufferSurface;
+        static ComPtr<ID3D11Texture2D> backBufferTexture;
         static ComPtr<IDXGISwapChain1> DXGISwapChain;
 
     };

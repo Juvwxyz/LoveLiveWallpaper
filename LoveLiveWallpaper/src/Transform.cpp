@@ -47,11 +47,11 @@ namespace LLWP
 
     bool Transform::HitTest(long x, long y)
     {
-        Vector tmp = Vector{ (float)x, (float)y, 0 } * worldToLocalMatrix;
-        return (tmp.x() > 0 &&
-                tmp.x() < size_.x() &&
-                tmp.y() > 0 &&
-                tmp.y() < size_.y());
+        Vector tmp = Vector{ (float)x-960, 540-(float)y, 0 } * worldToLocalMatrix;
+        return (tmp.x() > -size_.x()/2 &&
+                tmp.x() < size_.x()/2 &&
+                tmp.y() > -size_.y()/2 &&
+                tmp.y() < size_.y()/2);
     }
 
     Vector& Transform::Size()
@@ -69,17 +69,27 @@ namespace LLWP
         return position_;
     }
 
+    const Vector& Transform::Scale() const
+    {
+        return scale_;
+    }
+
+    float Transform::Rotation() const
+    {
+        return rotation_;
+    }
+
     D2D1_RECT_F Transform::rect()
     {
         return D2D1_RECT_F{ 0,0,size_.x(), size_.y() };
     }
      
-    D2D1_MATRIX_4X4_F Transform::localToWorld()
+    Matrix Transform::localToWorld()
     {
         return localToWorldMatrix;
     }
 
-    D2D1_MATRIX_4X4_F Transform::worldToLocal()
+    Matrix Transform::worldToLocal()
     {
         return worldToLocalMatrix;
     }
@@ -104,10 +114,13 @@ namespace LLWP
         for (; rotation_ >= 360; rotation_ -= 360) {}
         for (; rotation_ < 0; rotation_ += 360) {}
         localToWorldMatrix =
-            Matrix({ 1,1 }, 0, -(size_ / 2)) *
-            Matrix(scale_, rotation_, { 0,0 }) *
-            Matrix({ 1,1 }, 0, position_ + (size_ / 2));
+            Matrix(scale_, rotation_, position_);
         worldToLocalMatrix = Matrix(1 / scale_, -rotation_, -position_);
+    }
+
+    Transform::operator DirectX::XMMATRIX()
+    {
+        return localToWorldMatrix;
     }
 
     Transform::~Transform()

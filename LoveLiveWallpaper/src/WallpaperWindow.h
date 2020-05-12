@@ -16,14 +16,14 @@ namespace LLWP
 
         static void CaptureMouse();
 
+        int screenX, screenY;
+
     private:
 
         HINSTANCE hInst;
         MSG msg;
         RECT wr;
         NOTIFYICONDATAW nid;
-
-        int screenX, screenY;
         bool isExitting;
 
         static HWND hWnd;

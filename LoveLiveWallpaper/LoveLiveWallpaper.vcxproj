@@ -23,6 +23,7 @@
     <ClInclude Include="src\Behaviour.h" />
     <ClInclude Include="src\Button.h" />
     <ClInclude Include="src\Component.h" />
+    <ClInclude Include="src\CustomRenderer.h" />
     <ClInclude Include="src\EventSystem.h" />
     <ClInclude Include="src\Exception.h" />
     <ClInclude Include="src\Graphics.h" />
@@ -57,6 +58,7 @@
     <ClCompile Include="src\Behaviour.cpp" />
     <ClCompile Include="src\Button.cpp" />
     <ClCompile Include="src\Component.cpp" />
+    <ClCompile Include="src\CustomRenderer.cpp" />
     <ClCompile Include="src\Graphics.cpp" />
     <ClCompile Include="src\IDrag.cpp" />
     <ClCompile Include="src\Image.cpp" />

@@ -26,7 +26,7 @@ namespace LLWP
         {
             auto delta = ::std::chrono::duration_cast<::std::chrono::nanoseconds>(::std::chrono::system_clock::now() - last).count();
             last = ::std::chrono::system_clock::now();
-            this->transform().Rotate(_angularSpeed * delta * 1e-9);
+            this->transform().Rotate(_angularSpeed * delta * 1e-9f);
         }
     };
 }

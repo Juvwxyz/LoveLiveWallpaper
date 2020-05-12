@@ -132,6 +132,9 @@
     <ClInclude Include="src\Rotater.h">
       <Filter>src\Application</Filter>
     </ClInclude>
+    <ClInclude Include="src\CustomRenderer.h">
+      <Filter>src\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -205,6 +208,9 @@
     </ClCompile>
     <ClCompile Include="src\Button.cpp">
       <Filter>src\Engine\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CustomRenderer.cpp">
+      <Filter>src\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

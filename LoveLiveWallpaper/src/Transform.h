@@ -27,16 +27,20 @@ namespace LLWP
         const Vector& Size() const;
 
         const Vector& Position() const;
+        const Vector& Scale() const;
+        float Rotation() const;
 
         D2D1_RECT_F rect();
-        D2D1_MATRIX_4X4_F localToWorld();
-        D2D1_MATRIX_4X4_F worldToLocal();
+        Matrix localToWorld();
+        Matrix worldToLocal();
 
         //void setPosition(const Vector& v);
         //Vector getPosition();
         void Move(float x, float y);
         void ScaleBy(float s);
         void Rotate(float angle);
+
+        operator DirectX::XMMATRIX();
 
         ~Transform();
 

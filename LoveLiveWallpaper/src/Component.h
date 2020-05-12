@@ -13,6 +13,7 @@ namespace LLWP
         Component(GameObject & o);
 
         virtual GameObject& gameobject();
+        virtual const Transform& transform() const;
         virtual Transform& transform();
 
         virtual ~Component();

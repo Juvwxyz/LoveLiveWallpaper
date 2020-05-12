@@ -50,7 +50,7 @@ namespace LLWP
 
         TR invoke(TA... args)
         {
-            int s = handler_list.size();
+            int s = (int)handler_list.size();
             if (s-- == 0) return TR();
             auto it = handler_list.begin();
             for (size_t i = 0; i < s; it++, i++)

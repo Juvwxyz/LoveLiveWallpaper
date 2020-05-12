@@ -13,7 +13,12 @@ namespace LLWP
         transform_(*this),
         componentList_()
     {}
-    Transform& GameObject::tranform()
+    const Transform& GameObject::transform() const
+    {
+        return transform_;
+    }
+
+    Transform& GameObject::transform()
     {
         return transform_;
     }

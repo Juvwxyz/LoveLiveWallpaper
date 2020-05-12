@@ -6,16 +6,14 @@ namespace LLWP
     Texture::Texture() :
 		alphaBuffer(nullptr),
 		pixelSize{ 1,1 },
-		bitmap(nullptr),
-		source(nullptr)
+		bitmap(nullptr)
     {
     }
 
     Texture::Texture(const wchar_t* path):
 		alphaBuffer(nullptr),
 		pixelSize{ 1,1 },
-		bitmap(nullptr),
-		source(nullptr)
+		bitmap(nullptr)
     {
 		LoadFromFile(path);
     }
@@ -24,8 +22,8 @@ namespace LLWP
     {
 		HRESULT hr = S_OK;
 
-		ComPtr<IWICBitmapDecoder> pDecoder;
-		ComPtr<IWICBitmapFrameDecode> pSource;
+		ComPtr<IWICBitmapDecoder> decoder;
+		ComPtr<IWICBitmapFrameDecode> frameDecode;
 
 		hr = Graphics::WICFactory->
 			CreateDecoderFromFilename(
@@ -33,22 +31,24 @@ namespace LLWP
 				NULL,
 				GENERIC_READ,
 				WICDecodeMetadataCacheOnLoad,
-				pDecoder.GetAddressOf()
+				decoder.GetAddressOf()
 			);
 
 		if (hr != S_OK) return hr;
 
-		hr = pDecoder->GetFrame(0, &pSource);
+		hr = decoder->GetFrame(0, &frameDecode);
 
 		if (hr != S_OK) return hr;
+
+		ComPtr<IWICFormatConverter> formatConverter;
 
 		hr = Graphics::WICFactory->
-			CreateFormatConverter((IWICFormatConverter**)(source.ReleaseAndGetAddressOf()));
+			CreateFormatConverter(&formatConverter);
 
 		if (hr != S_OK) return hr;
 
-		hr = ((IWICFormatConverter*)(source.Get()))->Initialize(
-			pSource.Get(),
+		hr = formatConverter->Initialize(
+			frameDecode.Get(),
 			GUID_WICPixelFormat32bppPBGRA,
 			WICBitmapDitherTypeNone,
 			NULL,
@@ -60,7 +60,7 @@ namespace LLWP
 
 		hr = Graphics::D2DContext->
 			CreateBitmapFromWicBitmap(
-				((IWICFormatConverter*)(source.Get())),
+				formatConverter.Get(),
 				NULL,
 				&bitmap
 			);
@@ -72,10 +72,10 @@ namespace LLWP
 			delete[] alphaBuffer;
 		}
 
-		source->GetSize((UINT*)&pixelSize.x, (UINT*)&pixelSize.y);
+		formatConverter->GetSize((UINT*)&pixelSize.x, (UINT*)&pixelSize.y);
 		BYTE* buffer = new BYTE[(UINT64)pixelSize.x * pixelSize.y * 4];
 		alphaBuffer = new BYTE[(UINT64)pixelSize.x * pixelSize.y];
-		source->CopyPixels(
+		formatConverter->CopyPixels(
 			nullptr,
 			pixelSize.x * 4,
 			pixelSize.x * pixelSize.y * 4,
@@ -88,39 +88,6 @@ namespace LLWP
 				alphaBuffer[y * pixelSize.x + x] = buffer[x * pixelSize.y * 4 + y * 4 + 3];
 			}
 		}
-
-		D3D11_TEXTURE2D_DESC sysTexDesc;
-		sysTexDesc.Width = pixelSize.x;
-		sysTexDesc.Height = pixelSize.y;
-		sysTexDesc.MipLevels = 1;
-		sysTexDesc.ArraySize = 1;
-		sysTexDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-		sysTexDesc.SampleDesc.Count = 1;
-		sysTexDesc.SampleDesc.Quality = 0;
-		sysTexDesc.Usage = D3D11_USAGE_DYNAMIC;
-		sysTexDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-		sysTexDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		sysTexDesc.MiscFlags = 0;
-
-		D3D11_SUBRESOURCE_DATA data;
-
-		data.pSysMem = buffer;
-		data.SysMemPitch = pixelSize.x * 4;
-		data.SysMemSlicePitch = 0;
-
-		hr = Graphics::D3DDevice->CreateTexture2D(&sysTexDesc, &data, &texture);
-
-		D2D1_BITMAP_PROPERTIES1 prop;
-		prop.pixelFormat.format = DXGI_FORMAT_B8G8R8A8_UNORM;
-		prop.pixelFormat.alphaMode = D2D1_ALPHA_MODE_STRAIGHT;
-		prop.dpiX = 96;
-		prop.dpiY = 96;
-		prop.bitmapOptions = D2D1_BITMAP_OPTIONS_CPU_READ;
-
-		ComPtr<IDXGISurface> surf;
-		texture->QueryInterface(surf.GetAddressOf());
-		
-		hr = Graphics::D2DContext->CreateBitmapFromDxgiSurface(surf.Get(), prop, &bitmap1);
 
 		delete[] buffer;
 		return hr;

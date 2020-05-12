@@ -2,11 +2,13 @@
 
 #include "Behaviour.h"
 #include "Button.h"
+#include "Exception.h"
 #include "Graphics.h"
 #include "GameObject.h"
 #include "Image.h"
 #include "Mouse.h"
 #include "Raycaster.h"
+#include "CustomRenderer.h"
 #include "SpriteRenderer.h"
 #include "Tachie.h"
 #include "Rotater.h"
@@ -35,43 +37,38 @@ namespace LLWP
         framerate(0),
         wnd(hInst, pArgs)
     {
-        Graphics::Init(wnd);
+        // 初始化DirectX环境
+        HRESULT hr = Graphics::Init(wnd);
+        if (hr != S_OK) throw GraphicException();
 
-        innerCircle->AddComponent<SpriteRenderer>(L"Assets\\InnerCircle.png");
+        auto sr = innerCircle->AddComponent<CustomRenderer>(L"Assets\\InnerCircle.png", DirectX::XMFLOAT4{ .25f,.25f,.25f,1});
         auto r = innerCircle->AddComponent<Rotater>();
         r->setSpeed(-30);
-        innerCircle->tranform().Move(672, -228);
-        innerCircle->tranform().Size() = { 1576, 1576 };
+        innerCircle->transform().Move(480, 0);
+        innerCircle->transform().ScaleBy(0.75f);
 
-        outerCircle->AddComponent<SpriteRenderer>(L"Assets\\OuterCircle.png");
+        sr = outerCircle->AddComponent<CustomRenderer>(L"Assets\\OuterCircle.png", DirectX::XMFLOAT4{ .25f,.25f,.25f,1 });
         r = outerCircle->AddComponent<Rotater>();
         r->setSpeed(30);
-        outerCircle->tranform().Move(672, -228);
-        outerCircle->tranform().Size() = { 1576, 1576 };
+        outerCircle->transform().Move(480, 0);
+        outerCircle->transform().ScaleBy(0.75f);
 
-        mainTachie->tranform().Size() = { 1024,1024 };
-
-        mainTachie->AddComponent<SpriteRenderer>(L"Assets\\u_normal_navi_43001003.png");
+        mainTachie->AddComponent<CustomRenderer>(L"Assets\\u_normal_navi_43001003.png");
         mainTachie->AddComponent<Raycaster>();
         mainTachie->AddComponent<Tachie>();
-        mainTachie->tranform().Move(10, 28);
+        mainTachie->transform().Move(522-960, 0);
+        mainTachie->transform().Size() = { 1024,1024 };
 
-        pairTachie->tranform().Size() = { 1024,1024 };
-
-        pairTachie->AddComponent<SpriteRenderer>(L"Assets\\u_normal_navi_32009012.png");
+        pairTachie->AddComponent<CustomRenderer>(L"Assets\\u_normal_navi_32009012.png");
         pairTachie->AddComponent<Raycaster>();
         pairTachie->AddComponent<Tachie>();
-        pairTachie->tranform().Move(900, 28);
+        pairTachie->transform().Move(1422-960, 0);
+        pairTachie->transform().Size() = { 1024,1024 };
 
-        settingButton->tranform().Size() = { 50,50 };
-
-        settingButton->AddComponent<SpriteRenderer>(L"Assets\\settingbutton.png");
+        settingButton->AddComponent<CustomRenderer>(L"Assets\\settingbutton.png");
         settingButton->AddComponent<Button>();
-        settingButton->AddComponent<Rotater>();
 
-        settingButton->tranform().Move(1850, 20);
-
-        auto tachie = mainTachie->GetComponent<Tachie>();
+        settingButton->transform().Move(1875-960, 1035-540);
     }
 
     void Application::Update()
@@ -93,21 +90,31 @@ namespace LLWP
             Render();
         }
     }
+
     void Application::Render()
     {
-        Graphics::D2DContext->BeginDraw();
-        Graphics::D2DContext->Clear(D2D1_COLOR_F{ 0.5f, 0.5f ,0.5f ,1.0f });
+        HRESULT hr = S_OK;
+        Graphics::D3DContext->OMSetRenderTargets(1, Graphics::D3DRenderTargetView.GetAddressOf(), nullptr);
+        float background[4] = { 0.5f, 0.5f ,0.5f ,1.f };
+        Graphics::D3DContext->ClearRenderTargetView(Graphics::D3DRenderTargetView.Get(), background);
+
+        //Graphics::D2DContext->BeginDraw();
+        //Graphics::D2DContext->Clear({ 0.5f, 0.5f ,0.5f ,1.f });
+        //hr = Graphics::D2DContext->EndDraw();
 
         renderEventHandler.invoke();
 
+        Graphics::D2DContext->BeginDraw();
         auto a = std::to_wstring(framerate);
         Graphics::D2DContext->DrawTextW(
             a.c_str(),
-            a.size(),
+            (UINT32)a.size(),
             Graphics::Dwriteformat.Get(),
             { 1853, 70,1914,102 },
             Graphics::whiteBrush.Get()
         );
+        hr = Graphics::D2DContext->EndDraw();
+
         deltaTime = system_clock::now() - lastTime;
         framecount++;
         if (duration_cast<milliseconds>(deltaTime).count() >= 1000)
@@ -116,7 +123,7 @@ namespace LLWP
             framecount = 0;
             lastTime = system_clock::now();
         }
-        Graphics::D2DContext->EndDraw();
+
         Graphics::DXGISwapChain->Present(1, 0);
     }
     void DestroyObject(GameObject& obj)

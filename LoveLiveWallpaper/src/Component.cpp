@@ -14,9 +14,14 @@ namespace LLWP
         return obj_;
     }
 
+    const Transform& Component::transform() const
+    {
+        return obj_.transform();
+    }
+
     Transform& Component::transform()
     {
-        return obj_.tranform();
+        return obj_.transform();
     }
 
     Component::~Component()

@@ -14,4 +14,10 @@ namespace LLWP
     public:
         IndexOutofRangeException() : ::std::exception("IndexOutofRangeException", 1) {}
     };
+
+    class GraphicException : public ::std::exception
+    {
+    public:
+        GraphicException() : ::std::exception("GraphicException", 1) {}
+    };
 }

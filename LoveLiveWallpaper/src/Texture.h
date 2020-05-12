@@ -18,13 +18,11 @@ namespace LLWP
 
     protected:
         ComPtr<ID2D1Bitmap> bitmap;
-        ComPtr<ID2D1Bitmap1> bitmap1;
-        ComPtr<IWICBitmapSource> source;
-
-        ComPtr<ID3D11Texture2D> texture;
 
         BYTE* alphaBuffer;
         SIZE pixelSize;
+
+        D2D1_VECTOR_4F color;
 
         friend class SpriteRenderer;
     };

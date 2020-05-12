@@ -18,7 +18,8 @@ namespace LLWP
         GameObject();
         GameObject(const std::string& name);
 
-        Transform& tranform();
+        const Transform& transform() const;
+        Transform& transform();
         virtual ~GameObject();
     protected:
 

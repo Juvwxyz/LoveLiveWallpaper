@@ -23,7 +23,7 @@ namespace LLWP
 
     void Tachie::OnDrag(const MouseEventArg& e)
     {
-        this->transform().Move((float)e.delta().x, (float)e.delta().y);
+        this->transform().Move((float)e.delta().x, -(float)e.delta().y);
     }
 
 }
