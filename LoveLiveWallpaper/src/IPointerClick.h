@@ -12,5 +12,7 @@ namespace LLWP
     protected:
 
         virtual void OnPointerClick(const MouseEventArg& e) = 0;
+
+        friend class Mouse;
     };
 }

@@ -24,7 +24,7 @@ namespace LLWP
         MSG msg;
         RECT wr;
         NOTIFYICONDATAW nid;
-        bool isExitting;
+        static bool isExitting;
 
         static HWND hWnd;
         static HMENU hMenu;

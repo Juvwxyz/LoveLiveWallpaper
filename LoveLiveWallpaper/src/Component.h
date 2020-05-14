@@ -18,7 +18,6 @@ namespace LLWP
 
         virtual ~Component();
     protected:
-        GameObject& obj_;
         ::std::weak_ptr<GameObject> _obj;
 
     };

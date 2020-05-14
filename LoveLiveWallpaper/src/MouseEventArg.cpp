@@ -2,14 +2,14 @@
 
 namespace LLWP
 {
-    MouseEventArg::MouseEventArg(Type t, POINT p, POINT d) :
+    MouseEventArg::MouseEventArg(MOUSE_EVENT_TYPE t, POINT p, POINT d) :
         type_(t),
         pos_(p),
         delta_(d)
     {
     }
 
-    MouseEventArg::Type MouseEventArg::type() const
+    MOUSE_EVENT_TYPE MouseEventArg::type() const
     {
         return type_;
     }

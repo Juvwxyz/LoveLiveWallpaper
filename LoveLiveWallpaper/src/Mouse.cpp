@@ -2,51 +2,92 @@
 #include "MouseEventArg.h"
 #include "Interactable.h"
 #include "IDrag.h"
+#include "IPointerDown.h"
+#include "IPointerUp.h"
+#include "IPointerClick.h"
+#include "IPointerEnter.h"
+#include "IPointerLeave.h"
+#include "IPointerOver.h"
 
 namespace LLWP
 {
-    POINT Mouse::currentPos_;
-    POINT Mouse::delatPos;
+    POINT Mouse::_currentPos;
+    POINT Mouse::_delatPos;
     HitTestEventHandler Mouse::OnHitTestHandler;
-    bool Mouse::isLButtonDonw = false;
+    bool Mouse::isPointerDonw = false;
     Event<HitTestEventHandler> Mouse::OnHitTest(Mouse::OnHitTestHandler);
     Interactable* Mouse::CurrentHitted = nullptr;
     Interactable* Mouse::LastHitted = nullptr;
+    Interactable* Mouse::LastPointerDown = nullptr;
 
     void Mouse::ProcessMouseEvent(WPARAM wPara, LPARAM lParam)
     {
         CurrentHitted = nullptr;
         MSLLHOOKSTRUCT* msdata = (MSLLHOOKSTRUCT *) lParam;
 
-        delatPos = msdata->pt - currentPos_;
-        currentPos_ = msdata->pt;
+        _delatPos = msdata->pt - _currentPos;
+        _currentPos = msdata->pt;
 
-        MouseEventArg eventArgs(MouseEventArg::Type::None, currentPos_, delatPos);
-
-        OnHitTestHandler(CurrentHitted, eventArgs);
+        OnHitTestHandler(CurrentHitted, { MOUSE_EVENT_HIT_TEST, _currentPos, _delatPos });
 
         switch (wPara)
         {
         case WM_LBUTTONDOWN:
         {
-            isLButtonDonw = true;
-            LastHitted = CurrentHitted;
+            isPointerDonw = true;
+            if (IPointerDown* p = dynamic_cast<IPointerDown*>(CurrentHitted))
+            {
+                p->OnPointerDown({ MOUSE_EVENT_POINTER_DOWN, _currentPos, _delatPos });
+            }
+            LastPointerDown = CurrentHitted;
         }
         break;
         case WM_LBUTTONUP:
         {
-            isLButtonDonw = false;
-            LastHitted = CurrentHitted;
+            isPointerDonw = false;
+            if (IPointerUp* p = dynamic_cast<IPointerUp*>(LastPointerDown))
+            {
+                p->OnPointerUp({ MOUSE_EVENT_POINTER_UP, _currentPos, _delatPos });
+            }
+            if (LastPointerDown == CurrentHitted)
+            {
+                if (IPointerClick* p = dynamic_cast<IPointerClick*>(LastPointerDown))
+                {
+                    p->OnPointerClick({ MOUSE_EVENT_POINTER_CLICK, _currentPos, _delatPos });
+                }
+            }
         }
         break;
         case WM_MOUSEMOVE:
         {
-            if (isLButtonDonw)
+            if (LastHitted != CurrentHitted)
             {
-                if (LastHitted != nullptr)
+                if (IPointerLeave* p = dynamic_cast<IPointerLeave*>(LastHitted))
                 {
-                    dynamic_cast<IDrag*>(LastHitted)->OnDrag(eventArgs);
+                    p->OnPointerLeave({ MOUSE_EVENT_POINTER_LEAVE, _currentPos, _delatPos });
                 }
+                if (IPointerEnter* p = dynamic_cast<IPointerEnter*>(CurrentHitted))
+                {
+                    p->OnPointerEnter({ MOUSE_EVENT_POINTER_ENTER, _currentPos, _delatPos });
+                }
+            }
+            else
+            {
+                if (isPointerDonw)
+                {
+                    if (LastPointerDown != nullptr)
+                    {
+                        if (IDrag* p = dynamic_cast<IDrag*>(LastPointerDown))
+                        {
+                            p->OnDrag({ MOUSE_EVENT_DRAG, _currentPos, _delatPos });
+                        }
+                    }
+                }
+                else if (IPointerOver* p = dynamic_cast<IPointerOver*>(LastHitted))
+                {
+                    p->OnPointerOver({ MOUSE_EVENT_POINTER_OVER, _currentPos, _delatPos });
+                }
+
             }
         }
         break;
@@ -58,5 +99,6 @@ namespace LLWP
         default:
         break;
         }
+        LastHitted = CurrentHitted;
     }
 }

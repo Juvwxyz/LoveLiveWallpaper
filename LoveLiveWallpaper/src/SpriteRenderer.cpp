@@ -33,27 +33,5 @@ namespace LLWP
 
     void SpriteRenderer::Render()
     {
-        Graphics::D2DContext->BeginDraw();
-
-        if (_sprite->_texture->bitmap.Get() == nullptr)
-        {
-            Graphics::D2DContext->FillRectangle(
-                this->transform().rect(),
-                Graphics::whiteBrush.Get()
-            );
-        }
-        else
-        {
-            Graphics::D2DContext->DrawBitmap(
-                _sprite->_texture->bitmap.Get(),
-                this->transform().rect(),
-                1.f,
-                D2D1_INTERPOLATION_MODE_LINEAR,
-                nullptr,
-                (D2D1_MATRIX_4X4_F*)&this->transform().localToWorld()
-            );
-        }
-
-        Graphics::D2DContext->EndDraw();
     }
 }

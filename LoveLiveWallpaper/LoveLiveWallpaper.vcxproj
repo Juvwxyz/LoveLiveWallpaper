@@ -32,7 +32,9 @@
     <ClInclude Include="src\Interactable.h" />
     <ClInclude Include="src\IPointerClick.h" />
     <ClInclude Include="src\IPointerDown.h" />
-    <ClInclude Include="src\IPointerMove.h" />
+    <ClInclude Include="src\IPointerEnter.h" />
+    <ClInclude Include="src\IPointerLeave.h" />
+    <ClInclude Include="src\IPointerOver.h" />
     <ClInclude Include="src\IPointerUp.h" />
     <ClInclude Include="src\IWheelScroll.h" />
     <ClInclude Include="src\Matrix.h" />
@@ -63,7 +65,12 @@
     <ClCompile Include="src\IDrag.cpp" />
     <ClCompile Include="src\Image.cpp" />
     <ClCompile Include="src\Interactable.cpp" />
+    <ClCompile Include="src\IPointerClick.cpp" />
     <ClCompile Include="src\IPointerDown.cpp" />
+    <ClCompile Include="src\IPointerEnter.cpp" />
+    <ClCompile Include="src\IPointerLeave.cpp" />
+    <ClCompile Include="src\IPointerOver.cpp" />
+    <ClCompile Include="src\IPointerUp.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Matrix.cpp" />
     <ClCompile Include="src\Mouse.cpp" />

@@ -4,13 +4,13 @@
 
 namespace LLWP
 {
-    class IWheelMove : public virtual Interactable
+    class IWheelScroll : public virtual Interactable
     {
     public:
-        IWheelMove();
 
     protected:
+        IWheelScroll();
 
-        virtual void OnWheelMove(const MouseEventArg& e) = 0;
+        virtual void OnWheelScrool(const MouseEventArg& e) = 0;
     };
 }

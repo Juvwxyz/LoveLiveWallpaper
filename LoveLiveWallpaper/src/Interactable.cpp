@@ -11,7 +11,7 @@ namespace LLWP
     {
         Mouse::OnHitTest += (*this, &Interactable::OnHitTest);
     }
-    void Interactable::OnHitTest(Interactable*& hitted, const MouseEventArg& arg)
+    bool Interactable::OnHitTest(Interactable*& hitted, const MouseEventArg& arg)
     {
         Component* thisComponent = dynamic_cast<Component*>(this);
         if (thisComponent->transform().HitTest(arg.position().x, arg.position().y))
@@ -19,12 +19,15 @@ namespace LLWP
             if (hitted == nullptr)
             {
                 hitted = this;
+                return true;
             }
-            else if (dynamic_cast<Component*>(hitted)->transform().Position().z() <= thisComponent->transform().Position().z())
+            else if (dynamic_cast<Component*>(hitted)->transform().position().z() <= thisComponent->transform().position().z())
             {
                 hitted = this;
+                return true;
             }
         }
+        return false;
     }
     Interactable::~Interactable()
     {

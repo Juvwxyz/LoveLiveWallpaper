@@ -7,9 +7,10 @@ namespace LLWP
 
     class Interactable
     {
+    public:
+        virtual bool OnHitTest(Interactable*& hitted, const MouseEventArg& arg);
     protected:
         Interactable();
-        virtual void OnHitTest(Interactable*& hitted, const MouseEventArg& arg);
         virtual ~Interactable();
 
     private:

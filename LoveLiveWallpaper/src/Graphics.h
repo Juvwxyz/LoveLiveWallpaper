@@ -40,8 +40,6 @@ namespace LLWP
         static ComPtr<IDWriteFactory> DwriteFactory;
         static ComPtr<IDWriteTextFormat> Dwriteformat;
 
-        static ComPtr<IDWriteFactory> DWFactory;
-
         static ComPtr<ID3D11Device> D3DDevice;
         static ComPtr<ID3D11DeviceContext> D3DContext;
         static ComPtr<ID3D11RenderTargetView> D3DRenderTargetView;

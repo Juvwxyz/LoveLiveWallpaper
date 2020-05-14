@@ -53,22 +53,30 @@ namespace LLWP
         outerCircle->transform().Move(480, 0);
         outerCircle->transform().ScaleBy(0.75f);
 
-        mainTachie->AddComponent<CustomRenderer>(L"Assets\\u_normal_navi_43001003.png");
+        auto renderer = mainTachie->AddComponent<CustomRenderer>(L"Assets\\u_normal_navi_43001003.png");
         mainTachie->AddComponent<Raycaster>();
-        mainTachie->AddComponent<Tachie>();
-        mainTachie->transform().Move(522-960, 0);
-        mainTachie->transform().Size() = { 1024,1024 };
+        auto mtachie = mainTachie->AddComponent<Tachie>();
+        mainTachie->transform().Move(-462, -8);
+        mainTachie->transform().size() = { 1024,1024 };
 
-        pairTachie->AddComponent<CustomRenderer>(L"Assets\\u_normal_navi_32009012.png");
+        mtachie->renderer = renderer;
+
+        renderer = pairTachie->AddComponent<CustomRenderer>(L"Assets\\u_normal_navi_32009012.png");
         pairTachie->AddComponent<Raycaster>();
-        pairTachie->AddComponent<Tachie>();
-        pairTachie->transform().Move(1422-960, 0);
-        pairTachie->transform().Size() = { 1024,1024 };
+        auto ptachie = pairTachie->AddComponent<Tachie>();
+        pairTachie->transform().Move(462, 0);
+        pairTachie->transform().size() = { 1024,1024 };
 
-        settingButton->AddComponent<CustomRenderer>(L"Assets\\settingbutton.png");
-        settingButton->AddComponent<Button>();
+        ptachie->renderer = renderer;
 
-        settingButton->transform().Move(1875-960, 1035-540);
+        renderer = settingButton->AddComponent<CustomRenderer>(L"Assets\\settingbutton.png");
+        auto button = settingButton->AddComponent<Button>();
+        settingButton->transform().size() = { 50,50 };
+        settingButton->transform().Move(915, 495);
+
+        button->OnClick += (*ptachie, &Tachie::OnSettingButtonClick);
+        button->OnClick += (*mtachie, &Tachie::OnSettingButtonClick);
+        button->renderer = renderer;
     }
 
     void Application::Update()

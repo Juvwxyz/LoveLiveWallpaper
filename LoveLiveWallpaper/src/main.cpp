@@ -38,7 +38,7 @@ void StartApplication(void* app)
     hApplication = CreateThread(&sa, 0, RenderThreadProc, app, 0, &appThreadID);
 
     // 为了方便调试，暂时不捕获鼠标事件
-    //((Application*)app)->wnd.CaptureMouse();
+    ((Application*)app)->wnd.CaptureMouse();
 }
 
 DWORD RenderThreadProc(LPVOID app)

@@ -15,12 +15,14 @@ namespace LLWP
         float y() const;
         float z() const;
 
-        operator DirectX::XMVECTOR();
+        operator DirectX::XMVECTOR() const;
 
         Vector operator+(const Vector& right);
         Vector& operator+=(const Vector& d);
 
         Vector operator*(const Matrix& m);
+        Vector operator*(float f);
+        Vector operator*(const Vector& right);
         Vector& operator*=(float s);
         Vector& operator*=(const Matrix& m);
 

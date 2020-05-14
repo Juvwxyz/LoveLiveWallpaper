@@ -4,24 +4,23 @@
 namespace LLWP
 {
     Component::Component(GameObject& o) :
-        obj_(o),
         _obj(o.weak_from_this())
     {
     }
 
     GameObject& Component::gameobject()
     {
-        return obj_;
+        return *_obj.lock();
     }
 
     const Transform& Component::transform() const
     {
-        return obj_.transform();
+        return _obj.lock()->transform();
     }
 
     Transform& Component::transform()
     {
-        return obj_.transform();
+        return _obj.lock()->transform();
     }
 
     Component::~Component()

@@ -6,20 +6,9 @@ namespace LLWP
 {
 	Image::Image(GameObject& obj) :
 		Component(obj),
-        _sprite(nullptr),
-        _overrideSprite(nullptr)
+        _sprite(nullptr)
 
 	{
 	}
 
-    Sprite* Image::getOverrideSprite() const
-    {
-        return _overrideSprite;
-    }
-
-    Sprite* Image::setOverrideSprite(Sprite* sprite)
-    {
-        _overrideSprite = sprite;
-        return _overrideSprite;
-    }
 }

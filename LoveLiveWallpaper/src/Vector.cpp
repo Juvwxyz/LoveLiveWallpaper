@@ -29,7 +29,7 @@ namespace LLWP
         return DirectX::XMVectorGetZ(vec);
     }
 
-    Vector::operator DirectX::XMVECTOR()
+    Vector::operator DirectX::XMVECTOR() const
     {
         return vec;
     }
@@ -60,6 +60,16 @@ namespace LLWP
     Vector Vector::operator*(const Matrix& m)
     {
         return DirectX::XMVector3Transform(*this, m);
+    }
+
+    Vector Vector::operator*(float f)
+    {
+        return DirectX::XMVectorScale(*this, f);
+    }
+
+    Vector Vector::operator*(const Vector& v)
+    {
+        return DirectX::XMVectorMultiply(*this, v);
     }
 
 	Vector Vector::operator-()

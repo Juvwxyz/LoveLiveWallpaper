@@ -3,13 +3,9 @@
 
 namespace LLWP
 {
-    
-    class MouseEventArg;
-
     class IDrag : virtual public Interactable
     {
     public :
-
 
     protected:
         IDrag();

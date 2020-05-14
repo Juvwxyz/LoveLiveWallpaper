@@ -8,12 +8,12 @@ namespace LLWP
     HWND WallpaperWindow::workerw = nullptr;
     HWND WallpaperWindow::Progman = nullptr;
     HHOOK WallpaperWindow::mHook = nullptr;
+    bool WallpaperWindow::isExitting = false;
 
     // 窗口类初始化
     WallpaperWindow::WallpaperWindow(HINSTANCE hInst, LPWSTR pArgs) :
         hInst(hInst),
-        msg{ 0 },
-        isExitting(false)
+        msg{ 0 }
     {
         DISPLAY_DEVICEW displayDevice{ sizeof(DISPLAY_DEVICEW) };
 
@@ -205,7 +205,12 @@ namespace LLWP
     // 鼠标钩子回调函数
     LRESULT WallpaperWindow::MouseProc(int nCode, WPARAM wPara, LPARAM lParam)
     {
-        //UnhookWindowsHookEx(mHook);
+        if (isExitting)
+        {
+            return CallNextHookEx(nullptr, nCode, wPara, lParam);
+        }
+
+        UnhookWindowsHookEx(mHook);
 
         MSLLHOOKSTRUCT* mshook = (MSLLHOOKSTRUCT*)lParam;
         
@@ -221,7 +226,7 @@ namespace LLWP
             break;
         }
 
-        //mHook = SetWindowsHookExW(WH_MOUSE_LL, (HOOKPROC)MousHook, GetModuleHandleW(nullptr), 0);
+        mHook = SetWindowsHookExW(WH_MOUSE_LL, (HOOKPROC)MouseProc, GetModuleHandleW(nullptr), 0);
 
         return CallNextHookEx(nullptr, nCode, wPara, lParam);
     }

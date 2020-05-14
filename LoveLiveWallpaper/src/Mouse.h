@@ -8,7 +8,7 @@ namespace LLWP
 {
     class Interactable;
 
-    using HitTestEventHandler = Delegate<void(Interactable*&, const MouseEventArg&)>;
+    using HitTestEventHandler = Delegate<bool(Interactable*&, const MouseEventArg&)>;
 
     class Mouse
     {
@@ -17,14 +17,15 @@ namespace LLWP
         static Event<HitTestEventHandler> OnHitTest;
 
     private:
-        static POINT currentPos_;
-        static POINT delatPos;
+        static POINT _currentPos;
+        static POINT _delatPos;
 
         static HitTestEventHandler OnHitTestHandler;
 
-        static bool isLButtonDonw;
+        static bool isPointerDonw;
 
         static Interactable* CurrentHitted;
         static Interactable* LastHitted;
+        static Interactable* LastPointerDown;
     };
 }

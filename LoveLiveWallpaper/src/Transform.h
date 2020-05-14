@@ -4,12 +4,14 @@
 #include "typedef.h"
 
 #include <d2d1_1.h>
+#include <list>
+#include <memory>
 
 namespace LLWP
 {
     class GameObject;
 
-    class Transform
+    class Transform : public ::std::enable_shared_from_this<Transform>
     {
     public :
         Transform(GameObject&);
@@ -18,48 +20,52 @@ namespace LLWP
         Transform& operator=(const Transform&);
         Transform& operator=(const Transform&&);
 
-        void setParent(Transform& p);
-        Transform* parent();
+        void SetParent(Transform& p);
+        void SetParent(::std::shared_ptr<Transform> p);
+        void SetParent(GameObject& obj);
+        void SetParent(::std::shared_ptr<GameObject> obj);
+        ::std::shared_ptr<Transform> parent();
 
-        bool HitTest(long x, long y);
+        bool HitTest(long x, long y) const;
 
-        Vector& Size();
-        const Vector& Size() const;
+        Vector& size();
+        const Vector& size() const;
 
-        const Vector& Position() const;
-        const Vector& Scale() const;
-        float Rotation() const;
+        const Vector& position() const;
+        Vector& position();
 
-        D2D1_RECT_F rect();
-        Matrix localToWorld();
-        Matrix worldToLocal();
+        const Vector& scale() const;
+        Vector& scale();
 
-        //void setPosition(const Vector& v);
-        //Vector getPosition();
+        float rotation() const;
+        float& rotation();
+
+        Matrix localToWorld() const;
+        Matrix worldToLocal() const;
+
         void Move(float x, float y);
         void ScaleBy(float s);
         void Rotate(float angle);
-
-        operator DirectX::XMMATRIX();
 
         ~Transform();
 
     private:
         GameObject& obj;
-        Transform* parent_;
+        ::std::shared_ptr<Transform> _parent;
+        ::std::list<::std::shared_ptr<Transform>> _children;
 
-        Vector size_;
+        Vector _size;
 
-        Vector position_;
-        Vector scale_;
-        float rotation_;
-        Matrix localToWorldMatrix;
+        Vector _position;
+        Vector _scale;
+        float _rotation;
+        Matrix _localToWorldMatrix;
 
-        Matrix worldToLocalMatrix;
+        Matrix _worldToLocalMatrix;
 
-        Vector localPosition_;
-        Vector localScale_;
-        float locaRotation;
-        Matrix localToParentMatrix;
+        Vector _localPosition;
+        Vector _localScale;
+        float _localRotation;
+        Matrix _localToParentMatrix;
     };
 }

@@ -7,10 +7,11 @@ namespace LLWP
     class IPointerDown : public virtual Interactable
     {
     public:
-        IPointerDown();
 
     protected:
-
+        IPointerDown();
         virtual void OnPointerDown(const MouseEventArg& e) = 0;
+
+        friend class Mouse;
     };
 }

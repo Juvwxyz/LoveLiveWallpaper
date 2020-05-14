@@ -10,15 +10,7 @@ namespace LLWP
 	public:
 		Image(GameObject& obj);
 
-		__declspec(property(get = getOverrideSprite, put = setOverrideSprite))
-			Sprite* overrideSprite;
-
-	public:
-		Sprite* getOverrideSprite() const;
-		Sprite* setOverrideSprite(Sprite* sprite);
-
 	private:
-		Sprite* _sprite;
-		Sprite* _overrideSprite;
+		::std::shared_ptr<Sprite> _sprite;
 	};
 }

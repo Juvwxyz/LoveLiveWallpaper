@@ -6,18 +6,16 @@
 
 namespace LLWP
 {
-    struct VSMatrixBuffer
+    struct VSCBuffer
     {
         DirectX::XMMATRIX tranMat;
-        DirectX::XMMATRIX viewMat;
-        DirectX::XMMATRIX projMat;
+        DirectX::XMFLOAT4 color;
     };
 
     struct SpriteVertex
     {
         DirectX::XMFLOAT3 pos;
         DirectX::XMFLOAT2 texcoord;
-        DirectX::XMFLOAT4 color;
     };
 
     class CustomRenderer : public Renderer
@@ -31,6 +29,10 @@ namespace LLWP
 
         HRESULT LoadTextureFromFile(const wchar_t* path);
 
+        void setColor(float r, float g, float b, float a);
+
+        byte getAlpha(int x, int y);
+
     protected:
         ComPtr<ID3D11VertexShader> VertexShader;
         ComPtr<ID3D11PixelShader> PixelShader;
@@ -38,15 +40,17 @@ namespace LLWP
 
         ComPtr<ID3D11Buffer> VertexBuffer;
         ComPtr<ID3D11Buffer> IndexBuffer;
-        ComPtr<ID3D11Buffer> MatrixBuffer;
-        D3D11_MAPPED_SUBRESOURCE mappedMatrixBuffer;
+        ComPtr<ID3D11Buffer> vscBuffer;
+        D3D11_MAPPED_SUBRESOURCE mappedVSCBuffer;
         ComPtr<ID3D11ShaderResourceView> ShaderResourceView;
         ComPtr<ID3D11SamplerState> SamplerState;
         ComPtr<ID3D11Texture2D> texture;
         SpriteVertex vtks[4];
         unsigned long indexs[6];
         virtual void Render();
-
+    private:
+        DirectX::XMFLOAT4 _color;
+        BYTE* alphaBuffer;
         UINT size_x, size_y;
     };
 }

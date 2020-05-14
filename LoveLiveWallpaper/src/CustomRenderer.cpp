@@ -10,12 +10,13 @@ namespace LLWP
     CustomRenderer::CustomRenderer(GameObject& obj, const wchar_t* path, DirectX::XMFLOAT4 color) :
         Renderer(obj),
         vtks{
-            {{-1, 1,0},{0,0},color}, // top-left
-            {{ 1, 1,0},{1,0},color}, // top-right
-            {{ 1,-1,0},{1,1},color}, // bottom-right
-            {{-1,-1,0},{0,1},color}  // bottom-left
+            {{-1, 1,0},{0,0}}, // top-left
+            {{ 1, 1,0},{1,0}}, // top-right
+            {{ 1,-1,0},{1,1}}, // bottom-right
+            {{-1,-1,0},{0,1}}  // bottom-left
     },
-        indexs{ 0,1,2,0,2,3 }
+        indexs{ 0,1,2,0,2,3 },
+        _color(color)
     {
         HRESULT hr = S_OK;
 
@@ -29,14 +30,20 @@ namespace LLWP
         vtks[2].pos = {  x / 2, -y / 2, 0.5f };
         vtks[3].pos = { -x / 2, -y / 2, 0.5f };
 
+        VSCBuffer initbuffer;
+        initbuffer.color = { 1,1,1,1 };
+
+        D3D11_SUBRESOURCE_DATA initData;
+        initData.pSysMem = &initbuffer;
+
         D3D11_BUFFER_DESC MBDesc;
         MBDesc.Usage = D3D11_USAGE_DYNAMIC;
-        MBDesc.ByteWidth = sizeof(VSMatrixBuffer);
+        MBDesc.ByteWidth = sizeof(VSCBuffer);
         MBDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         MBDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
         MBDesc.MiscFlags = 0;
         MBDesc.StructureByteStride = 0;
-        hr = Graphics::D3DDevice->CreateBuffer(&MBDesc, nullptr, &MatrixBuffer);
+        hr = Graphics::D3DDevice->CreateBuffer(&MBDesc, &initData, &vscBuffer);
 
         D3D11_BUFFER_DESC bd;
         bd.Usage = D3D11_USAGE_DEFAULT;
@@ -44,7 +51,7 @@ namespace LLWP
         bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         bd.CPUAccessFlags = 0;
         bd.MiscFlags = 0;
-        D3D11_SUBRESOURCE_DATA initData;
+
         initData.pSysMem = vtks;
 
         hr = Graphics::D3DDevice->CreateBuffer(&bd, &initData, &VertexBuffer);
@@ -63,12 +70,11 @@ namespace LLWP
         const D3D11_INPUT_ELEMENT_DESC ied[] =
         {
             { "POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-            { "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },
-            { "COLOR",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,20,D3D11_INPUT_PER_VERTEX_DATA,0 }
+            { "TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 }
         };
 
         hr = Graphics::D3DDevice->CreateInputLayout(
-            ied, 3,
+            ied, 2,
             SpriteVertexShaderBytecode,
             sizeof(SpriteVertexShaderBytecode),
             &InputLayout);
@@ -149,27 +155,35 @@ namespace LLWP
 
         converter->GetSize(&size_x, &size_y);
 
-        BYTE* buffer = new BYTE[(UINT64)size_x * size_y * 4];
-
+        DWORD* buffer = new DWORD[(uint64_t)sizeof(DWORD) * size_x * size_y];
+        alphaBuffer = new BYTE[(uint64_t)size_x * size_y];
         converter->CopyPixels(
             nullptr,
             size_x * 4,
             size_x * size_y * 4,
-            buffer
+            reinterpret_cast<BYTE*>(buffer)
         );
 
-        D3D11_TEXTURE2D_DESC sysTexDesc;
-        sysTexDesc.Width = size_x;
-        sysTexDesc.Height = size_y;
-        sysTexDesc.MipLevels = 1;
-        sysTexDesc.ArraySize = 1;
-        sysTexDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-        sysTexDesc.SampleDesc.Count = 1;
-        sysTexDesc.SampleDesc.Quality = 0;
-        sysTexDesc.Usage = D3D11_USAGE_DYNAMIC;
-        sysTexDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-        sysTexDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        sysTexDesc.MiscFlags = 0;
+        for (size_t y = 0; y < size_y; y++)
+        {
+            for (size_t x = 0; x < size_x; x++)
+            {
+                alphaBuffer[y * size_x + x] = (BYTE)(buffer[(y * size_x + x)]>>24);
+            }
+        }
+
+        D3D11_TEXTURE2D_DESC texDesc;
+        texDesc.Width = size_x;
+        texDesc.Height = size_y;
+        texDesc.MipLevels = 1;
+        texDesc.ArraySize = 1;
+        texDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+        texDesc.SampleDesc.Count = 1;
+        texDesc.SampleDesc.Quality = 0;
+        texDesc.Usage = D3D11_USAGE_DYNAMIC;
+        texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+        texDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+        texDesc.MiscFlags = 0;
 
         D3D11_SUBRESOURCE_DATA data;
 
@@ -177,19 +191,29 @@ namespace LLWP
         data.SysMemPitch = size_x * 4;
         data.SysMemSlicePitch = 0;
 
-        hr = Graphics::D3DDevice->CreateTexture2D(&sysTexDesc, &data, &texture);
+        hr = Graphics::D3DDevice->CreateTexture2D(&texDesc, &data, &texture);
 
         delete[] buffer;
         return hr;
     }
 
+    void CustomRenderer::setColor(float r, float g, float b, float a)
+    {
+        _color = { r,g,b,a };
+    }
+
+    byte CustomRenderer::getAlpha(int x, int y)
+    {
+        return alphaBuffer[y * size_x + x];
+    }
+
     void CustomRenderer::Render()
     {
         HRESULT hr = S_OK;
-        hr = Graphics::D3DContext->Map(MatrixBuffer.Get(), 0u,
-            D3D11_MAP_WRITE_DISCARD, 0u, &mappedMatrixBuffer);
+        hr = Graphics::D3DContext->Map(vscBuffer.Get(), 0u,
+            D3D11_MAP_WRITE_DISCARD, 0u, &mappedVSCBuffer);
 
-        VSMatrixBuffer* MBPtr = (VSMatrixBuffer*)mappedMatrixBuffer.pData;
+        VSCBuffer* buffer = (VSCBuffer*)mappedVSCBuffer.pData;
 
         DirectX::XMMATRIX mat =
         transform().localToWorld()
@@ -202,11 +226,12 @@ namespace LLWP
                   0,       0,0,1
         };
 
-        MBPtr->tranMat = DirectX::XMMatrixTranspose(mat);
+        buffer->tranMat = DirectX::XMMatrixTranspose(mat);
+        buffer->color = _color;
 
-        Graphics::D3DContext->Unmap(MatrixBuffer.Get(), 0u);
+        Graphics::D3DContext->Unmap(vscBuffer.Get(), 0u);
 
-        Graphics::D3DContext->VSSetConstantBuffers(0, 1, MatrixBuffer.GetAddressOf());
+        Graphics::D3DContext->VSSetConstantBuffers(0, 1, vscBuffer.GetAddressOf());
         Graphics::D3DContext->IASetInputLayout(InputLayout.Get());
         Graphics::D3DContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         const UINT stride = sizeof(SpriteVertex);

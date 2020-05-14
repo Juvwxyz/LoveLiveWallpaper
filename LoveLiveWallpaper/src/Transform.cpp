@@ -1,22 +1,23 @@
 #include "Transform.h"
 
+#include "Application.h"
 #include "GameObject.h"
 
 namespace LLWP
 {
     Transform::Transform(GameObject& o):
         obj(o),
-        parent_(nullptr),
-        size_{ 100,100,0 },
-        position_{ 0,0,0 },
-        scale_{ 1,1,1 },
-        rotation_(0),
-        localToWorldMatrix(scale_, rotation_, position_),
-        worldToLocalMatrix(1/scale_, -rotation_, -position_),
-        localPosition_{ 0,0 },
-        localScale_{ 1,1 },
-        locaRotation(0),
-        localToParentMatrix(localScale_, locaRotation, localPosition_)
+        _parent(nullptr),
+        _size{ 100,100,0 },
+        _position{ 0,0,0 },
+        _scale{ 1,1,1 },
+        _rotation(0),
+        _localToWorldMatrix(_scale, _rotation, _position),
+        _worldToLocalMatrix(1/_scale, -_rotation, -_position),
+        _localPosition{ 0,0 },
+        _localScale{ 1,1,1 },
+        _localRotation(0),
+        _localToParentMatrix(_localScale, _localRotation, _localPosition)
     {}
 
     Transform::Transform(const Transform& t):
@@ -35,92 +36,112 @@ namespace LLWP
     {
         return *this;
     }
-    void Transform::setParent(Transform& p)
+    void Transform::SetParent(Transform& p)
     {
-        parent_ = &p;
+        _parent = p.shared_from_this();
     }
 
-    Transform* Transform::parent()
+    void Transform::SetParent(::std::shared_ptr<Transform> p)
     {
-        return parent_;
+        _parent = p;
     }
 
-    bool Transform::HitTest(long x, long y)
+    void Transform::SetParent(GameObject& obj)
     {
-        Vector tmp = Vector{ (float)x-960, 540-(float)y, 0 } * worldToLocalMatrix;
-        return (tmp.x() > -size_.x()/2 &&
-                tmp.x() < size_.x()/2 &&
-                tmp.y() > -size_.y()/2 &&
-                tmp.y() < size_.y()/2);
+        _parent = obj.transform().shared_from_this();
     }
 
-    Vector& Transform::Size()
+    void Transform::SetParent(::std::shared_ptr<GameObject> obj)
     {
-        return size_;
+        _parent = obj->transform().shared_from_this();
     }
 
-    const Vector& Transform::Size() const
+    ::std::shared_ptr<Transform> Transform::parent()
     {
-        return size_;
+        return _parent;
     }
 
-    const Vector& Transform::Position() const
+    bool Transform::HitTest(long x, long y) const
     {
-        return position_;
+        Vector tmp = Vector{ (float)x-960, 540-(float)y, 0 } * _worldToLocalMatrix;
+        return (tmp.x() > -_size.x()/2 &&
+                tmp.x() < _size.x()/2 &&
+                tmp.y() > -_size.y()/2 &&
+                tmp.y() < _size.y()/2);
     }
 
-    const Vector& Transform::Scale() const
+    Vector& Transform::size()
     {
-        return scale_;
+        return _size;
     }
 
-    float Transform::Rotation() const
+    const Vector& Transform::size() const
     {
-        return rotation_;
+        return _size;
     }
 
-    D2D1_RECT_F Transform::rect()
+    const Vector& Transform::position() const
     {
-        return D2D1_RECT_F{ 0,0,size_.x(), size_.y() };
-    }
-     
-    Matrix Transform::localToWorld()
-    {
-        return localToWorldMatrix;
+        return _position;
     }
 
-    Matrix Transform::worldToLocal()
+    Vector& Transform::position()
     {
-        return worldToLocalMatrix;
+        return _position;
+    }
+
+    const Vector& Transform::scale() const
+    {
+        return _scale;
+    }
+
+    Vector& Transform::scale()
+    {
+        return _scale;
+    }
+
+    float Transform::rotation() const
+    {
+        return _rotation;
+    }
+
+    float& Transform::rotation()
+    {
+        return _rotation;
+    }
+
+    Matrix Transform::localToWorld() const
+    {
+        return _localToWorldMatrix;
+    }
+
+    Matrix Transform::worldToLocal() const
+    {
+        return _worldToLocalMatrix;
     }
 
     void Transform::Move(float x, float y)
     {
-        position_ += {x, y};
-        localToWorldMatrix = Matrix(scale_, rotation_, position_);
-        worldToLocalMatrix = Matrix(1/scale_, -rotation_, -position_);
+        _position += {x, y};
+        _localToWorldMatrix = Matrix(_scale, _rotation, _position);
+        _worldToLocalMatrix = Matrix(1 / _scale, -_rotation, -_position * (1 / _scale));
     }
 
     void Transform::ScaleBy(float s)
     {
-        scale_ *= s;
-        localToWorldMatrix = Matrix(scale_, rotation_, position_);
-        worldToLocalMatrix = Matrix(1 / scale_, -rotation_, -position_);
+        _scale = Vector(_scale.x() * s, _scale.y() * s, 1);
+        _size = Vector(_size.x() * s, _size.y() * s, _size.z());
+        _localToWorldMatrix = Matrix(_scale, _rotation, _position);
+        _worldToLocalMatrix = Matrix(1 / _scale, -_rotation, -_position * (1 / _scale));
     }
 
     void Transform::Rotate(float angle)
     {
-        rotation_ += angle;
-        for (; rotation_ >= 360; rotation_ -= 360) {}
-        for (; rotation_ < 0; rotation_ += 360) {}
-        localToWorldMatrix =
-            Matrix(scale_, rotation_, position_);
-        worldToLocalMatrix = Matrix(1 / scale_, -rotation_, -position_);
-    }
-
-    Transform::operator DirectX::XMMATRIX()
-    {
-        return localToWorldMatrix;
+        _rotation += angle;
+        for (; _rotation >= 360; _rotation -= 360) {}
+        for (; _rotation < 0; _rotation += 360) {}
+        _localToWorldMatrix = Matrix(_scale, _rotation, _position);
+        _worldToLocalMatrix = Matrix(1 / _scale, -_rotation, -_position * (1 / _scale));
     }
 
     Transform::~Transform()
