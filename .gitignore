@@ -5,6 +5,9 @@
 
 LLWP-Test/
 
+# HLSL Compiled headers
+*.shh
+
 # User-specific files
 *.rsuser
 *.suo

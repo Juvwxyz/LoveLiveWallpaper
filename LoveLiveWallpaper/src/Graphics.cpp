@@ -8,6 +8,9 @@ namespace LLWP
     Graphics::~Graphics()
     {
     }
+
+    float Graphics::scaleFactor = 1.f;
+
     ComPtr<IWICImagingFactory> Graphics::WICFactory;
 
     ComPtr<ID2D1Bitmap1> Graphics::targetBitmap;
@@ -36,6 +39,8 @@ namespace LLWP
     HRESULT Graphics::Init(const WallpaperWindow& wnd)
     {
         HRESULT hr = S_OK;
+
+        scaleFactor = (float)wnd.screenY / 1080.f;
 
         hr = CoInitialize(NULL);
         if (hr != S_OK) return hr;
@@ -97,8 +102,8 @@ namespace LLWP
         if (hr != S_OK) return hr;
 
         DXGI_SWAP_CHAIN_DESC1 swapChainDesc;
-        swapChainDesc.Width = 0;
-        swapChainDesc.Height = 0;
+        swapChainDesc.Width = wnd.screenX;
+        swapChainDesc.Height = wnd.screenY;
         swapChainDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
         swapChainDesc.Stereo = false;
         swapChainDesc.SampleDesc.Count = 1;
@@ -152,8 +157,8 @@ namespace LLWP
         if (hr != S_OK) return hr;
 
         D3D11_VIEWPORT vp;
-        vp.Width = float(1920);
-        vp.Height = float(1080);
+        vp.Width = float(wnd.screenX);
+        vp.Height = float(wnd.screenY);
         vp.MinDepth = 0.0f;
         vp.MaxDepth = 1.0f;
         vp.TopLeftX = 0.0f;
@@ -213,12 +218,17 @@ namespace LLWP
             DWRITE_FONT_WEIGHT_NORMAL,
             DWRITE_FONT_STYLE_NORMAL,
             DWRITE_FONT_STRETCH_NORMAL,
-            24.f,
+            24.f * scaleFactor,
             L"",
             &Dwriteformat
         );
         if (hr != S_OK) return hr;
         return S_OK;
+    }
+
+    float Graphics::getScaleFactor()
+    {
+        return scaleFactor;
     }
 
     HRESULT LoadBitMap(LPCWSTR path, ID2D1Bitmap** ppBitmap, IWICBitmapSource** source)

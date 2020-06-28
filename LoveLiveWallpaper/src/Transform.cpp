@@ -2,6 +2,7 @@
 
 #include "Application.h"
 #include "GameObject.h"
+#include "Graphics.h"
 
 namespace LLWP
 {
@@ -63,6 +64,8 @@ namespace LLWP
 
     bool Transform::HitTest(long x, long y) const
     {
+        x /= Graphics::getScaleFactor();
+        y /= Graphics::getScaleFactor();
         Vector tmp = Vector{ (float)x-960, 540-(float)y, 0 } * _worldToLocalMatrix;
         return (tmp.x() > -_size.x()/2 &&
                 tmp.x() < _size.x()/2 &&

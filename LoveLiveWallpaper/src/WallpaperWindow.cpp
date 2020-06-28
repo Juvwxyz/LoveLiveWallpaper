@@ -209,8 +209,11 @@ namespace LLWP
         {
             return CallNextHookEx(nullptr, nCode, wPara, lParam);
         }
+#ifdef _DEBUG
 
         UnhookWindowsHookEx(mHook);
+
+#endif // _DEBUG
 
         MSLLHOOKSTRUCT* mshook = (MSLLHOOKSTRUCT*)lParam;
         
@@ -225,8 +228,11 @@ namespace LLWP
         default:
             break;
         }
+#ifdef _DEBUG
 
         mHook = SetWindowsHookExW(WH_MOUSE_LL, (HOOKPROC)MouseProc, GetModuleHandleW(nullptr), 0);
+
+#endif // DEBUG
 
         return CallNextHookEx(nullptr, nCode, wPara, lParam);
     }

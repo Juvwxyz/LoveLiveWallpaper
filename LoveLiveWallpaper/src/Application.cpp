@@ -118,7 +118,12 @@ namespace LLWP
             a.c_str(),
             (UINT32)a.size(),
             Graphics::Dwriteformat.Get(),
-            { 1853, 70,1914,102 },
+            {
+                1853 * Graphics::getScaleFactor(),
+                70 * Graphics::getScaleFactor(),
+                1914 * Graphics::getScaleFactor(),
+                102 * Graphics::getScaleFactor()
+            },
             Graphics::whiteBrush.Get()
         );
         hr = Graphics::D2DContext->EndDraw();

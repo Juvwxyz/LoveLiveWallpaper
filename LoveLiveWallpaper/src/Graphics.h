@@ -23,6 +23,8 @@ namespace LLWP
         Graphics& operator=(const Graphics&) = delete;
         Graphics& operator=(const Graphics&&) = delete;
         ~Graphics();
+
+        static float scaleFactor;
     public:
         static HRESULT Init(const WallpaperWindow& wnd);
 
@@ -52,5 +54,6 @@ namespace LLWP
         static ComPtr<ID3D11Texture2D> backBufferTexture;
         static ComPtr<IDXGISwapChain1> DXGISwapChain;
 
+        static float getScaleFactor();
     };
 }

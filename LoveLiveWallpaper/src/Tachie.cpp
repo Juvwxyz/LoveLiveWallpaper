@@ -37,7 +37,10 @@ namespace LLWP
     {
         if (canDrag)
         {
-            this->transform().Move((float)e.delta().x, -(float)e.delta().y);
+            this->transform().Move(
+                (float)e.delta().x / Graphics::getScaleFactor(),
+                -(float)e.delta().y / Graphics::getScaleFactor()
+            );
         }
     }
 
@@ -46,8 +49,8 @@ namespace LLWP
         Interactable* dummy = nullptr;
         if (Interactable::OnHitTest(dummy, arg))
         {
-            int x = arg.position().x;
-            int y = arg.position().y;
+            int x = arg.position().x / Graphics::getScaleFactor();
+            int y = arg.position().y / Graphics::getScaleFactor();
             Vector tmp = Vector{ (float)x - 960, 540 - (float)y, 0 } * transform().worldToLocal();
             x = ((int)tmp.x() + 512);
             y = 512 - (int)tmp.y();
