@@ -154,7 +154,6 @@ namespace LLWP
     Json* Json::read_object(std::istream& s)
     {
         Json* json = new Json(Type::object);
-        json->data.o = new Object();
 
         s.get();
         skip_white_space(s);

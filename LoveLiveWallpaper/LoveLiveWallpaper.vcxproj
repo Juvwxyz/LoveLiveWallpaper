@@ -24,6 +24,7 @@
     <ClInclude Include="src\Button.h" />
     <ClInclude Include="src\Component.h" />
     <ClInclude Include="src\CustomRenderer.h" />
+    <ClInclude Include="src\DefaultSettings.h" />
     <ClInclude Include="src\EventSystem.h" />
     <ClInclude Include="src\Exception.h" />
     <ClInclude Include="src\Graphics.h" />

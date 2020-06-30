@@ -101,13 +101,13 @@ namespace LLWP
         hr = Graphics::D3DDevice->CreateShaderResourceView(texture.Get(), &srvDesc, &ShaderResourceView);
 
         D3D11_SAMPLER_DESC sampDesc;
-        sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;//D3D11_FILTER_MIN_MAG_MIP_POINT;
+        sampDesc.Filter = D3D11_FILTER_ANISOTROPIC;
         sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
         sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
         sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
         sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
         sampDesc.MipLODBias = 0;
-        sampDesc.MaxAnisotropy = 0;
+        sampDesc.MaxAnisotropy = 16;
         sampDesc.MinLOD = 0;
         sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
         hr = Graphics::D3DDevice->CreateSamplerState(&sampDesc, &SamplerState);

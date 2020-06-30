@@ -81,6 +81,12 @@ namespace LLWP
             return as<T>();
         }
 
+        template<class T>
+        Json& operator=(T right)
+        {
+            throw json_exception("Bad Conversion.");
+        }
+
         template<class T, class SFINAE = typename std::enable_if_t<std::is_integral_v<T> || std::is_floating_point_v<T>, int>>
         Json& operator=(T right)
         {
@@ -114,6 +120,7 @@ namespace LLWP
             clear();
             type = right.type;
             data = right.data;
+            right.data = { 0 };
             right.clear();
             return *this;
         }
@@ -126,6 +133,7 @@ namespace LLWP
             strcpy_s(data.s, str.size() + 1, str.c_str());
             return *this;
         }
+
         ~Json();
     private:
         struct Array : public std::vector<Json*>

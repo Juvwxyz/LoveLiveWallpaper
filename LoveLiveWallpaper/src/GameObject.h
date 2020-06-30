@@ -30,8 +30,8 @@ namespace LLWP
         std::list<std::shared_ptr<Component>> componentList_;
 
         friend class Transform;
-        template<class OBJECT, class... Args>
-        friend ::std::shared_ptr<OBJECT> CreateObject(Args&&... args_);
+        template<class... Args>
+        friend ::std::shared_ptr<GameObject> CreateObject(Args&&... args_);
         friend void DestroyObject(GameObject& obj);
 
         bool OnHitTest(const MouseEventArg& e);

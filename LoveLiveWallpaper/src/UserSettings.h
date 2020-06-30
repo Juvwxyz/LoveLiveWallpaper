@@ -13,5 +13,7 @@ namespace LLWP
 
     public:
         UserSettings();
+
+        const ::std::string& getVersion();
     };
 }

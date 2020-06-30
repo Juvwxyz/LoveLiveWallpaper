@@ -1,7 +1,9 @@
 #include "UserSettings.h"
 #include "winhead.h"
+#include "DefaultSettings.h"
 
 #include <fstream>
+#include <sstream>
 #include <shlobj_core.h>
 #include <Shlwapi.h>
 
@@ -18,8 +20,8 @@ namespace LLWP
 
         if (!PathFileExistsW(configPath.c_str()))
         {
-            data = Json(Json::Type::object);
-            data["Version"] = "0.0.0.1";
+            ::std::istringstream Default(DefaultSettings);
+            data = Json::Deserialize(Default);
             ::std::ofstream ofs;
             ofs.open(configPath);
             ofs << data;
@@ -33,5 +35,9 @@ namespace LLWP
             ifs.close();
         }
 
+    }
+    const::std::string& UserSettings::getVersion()
+    {
+        return data["Version"];
     }
 }

@@ -151,7 +151,7 @@ namespace LLWP
             lastTime = system_clock::now();
         }
 
-        Graphics::DXGISwapChain->Present(1, 0);
+        Graphics::DXGISwapChain->Present(0, 0);
     }
     void DestroyObject(GameObject& obj)
     {

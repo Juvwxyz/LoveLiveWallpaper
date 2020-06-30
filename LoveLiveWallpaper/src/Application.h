@@ -50,16 +50,16 @@ namespace LLWP
 
         static ::std::list<::std::shared_ptr<GameObject>> ObjectList_;
 
-        template<class OBJECT, class... Args>
-        friend ::std::shared_ptr<OBJECT> CreateObject(Args&&... args_);
+        template<class... Args>
+        friend ::std::shared_ptr<GameObject> CreateObject(Args&&... args_);
 
         friend void DestroyObject(GameObject& obj);
     };
 
-    template<class OBJECT = GameObject, class... Args>
-    ::std::shared_ptr<OBJECT> CreateObject(Args&&... args_)
+    template<class... Args>
+    ::std::shared_ptr<GameObject> CreateObject(Args&&... args_)
     {
-        ::std::shared_ptr<OBJECT> obj = std::make_shared<OBJECT>(std::forward<Args&&>(args_)...);
+        ::std::shared_ptr<GameObject> obj = std::make_shared<GameObject>(std::forward<Args&&>(args_)...);
         obj->self_ = Application::ObjectList_.insert(Application::ObjectList_.end(), obj);
         return obj;
     }
