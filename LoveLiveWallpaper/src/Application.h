@@ -41,6 +41,8 @@ namespace LLWP
         static Action<> updateEventHandler;
         static Action<> renderEventHandler;
 
+        static ::std::wstring ProfilePath;
+
         ::std::chrono::system_clock::duration deltaTime;
         ::std::chrono::system_clock::time_point lastTime;
         int framecount;

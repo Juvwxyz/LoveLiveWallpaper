@@ -14,11 +14,23 @@
     <ClCompile Include="EventSystem_Test.cpp">
       <Filter>EventSystemTest</Filter>
     </ClCompile>
+    <ClCompile Include="..\LoveLiveWallpaper\src\Json.cpp">
+      <Filter>JsonTest</Filter>
+    </ClCompile>
+    <ClCompile Include="Json_Test.cpp">
+      <Filter>JsonTest</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="..\LoveLiveWallpaper\src\Event.h">
       <Filter>EventSystemTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LoveLiveWallpaper\src\Json.h">
+      <Filter>JsonTest</Filter>
+    </ClInclude>
+    <ClInclude Include="..\LoveLiveWallpaper\src\Matrix.h">
+      <Filter>MatrixTest</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -30,6 +42,9 @@
     </Filter>
     <Filter Include="EventSystemTest">
       <UniqueIdentifier>{24062be1-9a31-4d9a-ba2c-2d92ed023be7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JsonTest">
+      <UniqueIdentifier>{3ab34539-7550-47bc-9796-2ab22dec55c6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

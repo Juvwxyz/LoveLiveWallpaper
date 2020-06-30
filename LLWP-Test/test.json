@@ -1,0 +1,58 @@
+{
+  "ws": " \\t\\n\\r",
+  "escape": "\\\" \\\\ \\/ \\b \\f \\n \\r \\t \\uffff ",
+  "int": -1234,
+  "": null,
+  "float": 12.34,
+  "bool": false,
+  "sting": "1234",
+  "object": {
+    "key": "value",
+    "key2": 1234e-2,
+    "empty": []
+  },
+  "array": [
+    0.1234,
+    12.34,
+    true,
+    "1234",
+    {
+      "key": "value",
+      "key2": 12.34
+    }
+  ],
+  "empty": {},
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "(gdb) 启动",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/main",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+        {
+          "description": "为 gdb 启用整齐打印",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ],
+      "preLaunchTask": "make main"
+    }
+  ],
+  "task": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "make main",
+        "type": "shell",
+        "command": "make"
+      }
+    ]
+  }
+}

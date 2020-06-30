@@ -1,5 +1,7 @@
 #include "Application.h"
 
+#include <shlobj_core.h>
+
 #include "Behaviour.h"
 #include "Button.h"
 #include "Exception.h"
@@ -12,6 +14,7 @@
 #include "SpriteRenderer.h"
 #include "Tachie.h"
 #include "Rotater.h"
+#include "UserSettings.h"
 
 using namespace ::std::chrono;
 
@@ -25,6 +28,8 @@ namespace LLWP
     Event<Action<>> Application::OnUpdate(Application::updateEventHandler);
     Event<Action<>> Application::OnRender(Application::renderEventHandler);
 
+    ::std::wstring Application::ProfilePath;
+
     Application::Application(HINSTANCE hInst, LPWSTR pArgs) :
         mainTachie(CreateObject("MainTachie")),
         pairTachie(CreateObject("PairTachie")),
@@ -37,6 +42,15 @@ namespace LLWP
         framerate(0),
         wnd(hInst, pArgs)
     {
+        ProfilePath.resize(MAX_PATH);
+        SHGetFolderPathW(wnd.hWnd, CSIDL_LOCAL_APPDATA, nullptr, 0, ProfilePath.data());
+        ProfilePath.resize(lstrlenW(ProfilePath.data()));
+        ProfilePath += L"\\LoveLiveWallpaper";
+
+        int result = SHCreateDirectory(wnd.hWnd, ProfilePath.c_str());
+
+        UserSettings userSettings;
+
         // 初始化DirectX环境
         HRESULT hr = Graphics::Init(wnd);
         if (hr != S_OK) throw GraphicException();

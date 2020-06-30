@@ -141,6 +141,15 @@
     <ClInclude Include="src\IPointerOver.h">
       <Filter>src\Engine\Input\Interface</Filter>
     </ClInclude>
+    <ClInclude Include="src\Json.h">
+      <Filter>src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UserSettings.h">
+      <Filter>src\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="src\JsonException.h">
+      <Filter>src\Exception</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -232,6 +241,12 @@
     </ClCompile>
     <ClCompile Include="src\IPointerOver.cpp">
       <Filter>src\Engine\Input\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Json.cpp">
+      <Filter>src\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UserSettings.cpp">
+      <Filter>src\Application</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
