@@ -14,6 +14,8 @@ namespace LLEngine
 
         bool ProcessMessage();
 
+        inline HWND GetHWND() const { return hwnd; }
+
     protected:
         HWND hwnd;
         bool isRunning;

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "LLWP": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

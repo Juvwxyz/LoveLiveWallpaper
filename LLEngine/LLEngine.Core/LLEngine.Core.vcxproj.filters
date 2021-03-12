@@ -7,6 +7,9 @@
     <Filter Include="common">
       <UniqueIdentifier>{55fd74d0-f0ce-4fb6-96d1-f4509f7ad36c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{5a4dfb69-e2f9-40e1-a7c4-db5ab328514f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -14,6 +17,15 @@
     </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DxEnv.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ComPtr.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -25,6 +37,12 @@
     </ClCompile>
     <ClCompile Include="Window.cpp">
       <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DxEnv.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

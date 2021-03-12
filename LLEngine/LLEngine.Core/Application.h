@@ -29,6 +29,7 @@ namespace LLEngine
         delegate void StartUpHandler();
         static event StartUpHandler^ StartUpEvent;
 
+        inline Window* GetWnd() { return wnd; }
     private:
         static Application^ app = nullptr;
         Window* wnd;

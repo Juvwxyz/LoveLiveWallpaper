@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "Window.h"
+#include "Graphics.h"
 
 #include <vcclr.h>
 
@@ -21,6 +22,8 @@ namespace LLEngine
     void Application::Run()
     {
         wnd = new Window(title);
+
+        Graphics::Initialize(this);
 
         Console::WriteLine("{0} starting up...", title);
         this->StartUp();

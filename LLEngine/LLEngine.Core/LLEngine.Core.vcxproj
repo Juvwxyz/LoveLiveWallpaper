@@ -79,11 +79,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="ComPtr.h" />
+    <ClInclude Include="DxEnv.h" />
+    <ClInclude Include="Graphics.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="DxEnv.cpp" />
+    <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
